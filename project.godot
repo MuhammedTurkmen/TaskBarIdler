@@ -1,0 +1,84 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="TaskBarIdler"
+run/main_scene="uid://c2oqyl5ngvvg7"
+config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+MousePassThrough="*uid://dmwpqknwvcnxb"
+Windows="*uid://gjlemfo8waxw"
+Paths="*uid://dhjbigf5bw638"
+Fonts="*uid://cmes28g8iac40"
+ConsoleLogger="*uid://5dclra8xxi4o"
+GameManager="*uid://li5x6va0v7wp"
+WindowManager="*uid://dwddo2i7rlpc3"
+Utils="*uid://bl4wbfh6gvuev"
+EventBus="*uid://cwje4eobipesm"
+DragManager="*uid://cmt5edjgt0gg"
+
+[debug]
+
+file_logging/enable_file_logging=true
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/initial_position_type=3
+window/size/borderless=true
+window/size/transparent=true
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_height"
+window/per_pixel_transparency/allowed=true
+
+[dotnet]
+
+project/assembly_name="TaskBarIdler"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/file_exporter/plugin.cfg", "res://addons/inspector_tabs/plugin.cfg", "res://addons/project-time-tracker/plugin.cfg", "res://addons/snapshot_tool/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://src/~debug/": "yellow"
+}
+
+[global_group]
+
+trees=""
+enemies=""
+fishes=""
+ores=""
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+viewport/transparent_background=true
+
+[shader_globals]
+
+my_color={
+"type": "vec4",
+"value": Vector4(0, 0, 0, 0)
+}

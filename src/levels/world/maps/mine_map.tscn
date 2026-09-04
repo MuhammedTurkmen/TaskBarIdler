@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://mn3ot31fw45o"]
+
+[node name="MineMap" type="Node2D" unique_id=868057754]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=894692826]
+offset_right = 340.0
+offset_bottom = 60.0
+color = Color(0.39655814, 0.41555992, 0.42935252, 1)
+
+[node name="Background" type="Sprite2D" parent="." unique_id=2106604292]
+scale = Vector2(5.4375, 1.0625)
+
+[node name="CaveDarkness" type="ColorRect" parent="." unique_id=823679595]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.16924527, 0.1692453, 0.16924527, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Rocks" type="Node2D" parent="." unique_id=1090895042]
+
+[node name="Effects" type="Node2D" parent="." unique_id=364355790]
+
+[node name="Dust" type="CPUParticles2D" parent="Effects" unique_id=1753213924]
+
+[node name="TorchLight" type="PointLight2D" parent="." unique_id=1281022801]
+
+[node name="AmbientSound" type="AudioStreamPlayer2D" parent="." unique_id=1356346180]

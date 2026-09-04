@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://c18gogyry54jq"]
+
+[ext_resource type="Material" uid="uid://c4uj47qis8qrk" path="res://src/shaders/slot.tres" id="1_dcjly"]
+[ext_resource type="StyleBox" uid="uid://df4o2ifkv7ela" path="res://src/resources/styles/main_theme/box_texture/border/border1px.tres" id="2_dcjly"]
+[ext_resource type="Script" uid="uid://b1vw561e7aps8" path="res://src/gameplay/inventory_system/slot_ui.gd" id="3_nl5ym"]
+[ext_resource type="LabelSettings" uid="uid://lkwil1wcfnat" path="res://src/resources/styles/main_theme/label_styles/normal/slot_quantity.tres" id="4_bu7vy"]
+
+[node name="UI Slot" type="PanelContainer" unique_id=2070671675]
+material = ExtResource("1_dcjly")
+custom_minimum_size = Vector2(35, 35)
+custom_maximum_size = Vector2(35, 35)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("2_dcjly")
+script = ExtResource("3_nl5ym")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1980724010]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer" unique_id=1007304109]
+custom_minimum_size = Vector2(27, 27)
+custom_maximum_size = Vector2(27, 27)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="MarginContainer/TextureRect" unique_id=1181441236]
+layout_mode = 0
+offset_top = 5.2
+offset_right = 22.0
+offset_bottom = 28.2
+label_settings = ExtResource("4_bu7vy")
+horizontal_alignment = 1
+vertical_alignment = 2

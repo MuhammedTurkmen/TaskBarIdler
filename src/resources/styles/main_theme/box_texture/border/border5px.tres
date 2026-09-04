@@ -1,0 +1,15 @@
+[gd_resource type="StyleBoxTexture" format=3 uid="uid://cgwsnprrs7cqf"]
+
+[ext_resource type="Texture2D" uid="uid://c85kcsmhyrxiy" path="res://assets/art/ui/window/border/normal/border3px.png" id="1_sklkr"]
+
+[resource]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+texture = ExtResource("1_sklkr")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+region_rect = Rect2(0, 0, 32, 32)

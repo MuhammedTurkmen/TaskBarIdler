@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://c4uj47qis8qrk"]
+
+[ext_resource type="Shader" uid="uid://dd6u0iabgvqwc" path="res://src/shaders/slot.gdshader" id="1_37rqb"]
+
+[resource]
+shader = ExtResource("1_37rqb")
+shader_parameter/color1 = Color(0, 0, 0, 1)
+shader_parameter/color2 = Color(0.64352506, 0.58771116, 0.573138, 1)
+shader_parameter/smoothness = 0.0
+shader_parameter/invert_diagonal = false

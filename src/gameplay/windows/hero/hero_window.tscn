@@ -1,0 +1,424 @@
+[gd_scene format=3 uid="uid://dctbq1y1ulqis"]
+
+[ext_resource type="Script" uid="uid://cb6af8u504j1q" path="res://src/gameplay/windows/hero/hero_window.gd" id="1_4gbab"]
+[ext_resource type="StyleBox" uid="uid://1ly2dto7uix8" path="res://src/resources/styles/main_theme/box_flat/rectangular/borders/border_filled_2px.tres" id="2_dfkeh"]
+[ext_resource type="Texture2D" uid="uid://cn5w27e7seeo8" path="res://assets/art/ui/window/new_banner.png" id="3_4gbab"]
+[ext_resource type="LabelSettings" uid="uid://dnpougdg66s7s" path="res://src/resources/styles/main_theme/label_styles/title/panel.tres" id="4_xdl55"]
+[ext_resource type="PackedScene" uid="uid://cytuhwbt0tg67" path="res://src/ui/hud/h_separator_2px.tscn" id="5_dfkeh"]
+[ext_resource type="PackedScene" uid="uid://c56fsfcgjkwjs" path="res://src/ui/hud/bordered_slot.tscn" id="6_h1ca2"]
+[ext_resource type="StyleBox" uid="uid://bqvbeetvyeuvo" path="res://src/resources/styles/main_theme/box_flat/rectangular/borders/border_filled_1px.tres" id="7_y7w0m"]
+[ext_resource type="LabelSettings" uid="uid://bopv4h8sian4r" path="res://src/resources/styles/main_theme/label_styles/normal/character_name.tres" id="8_557j8"]
+[ext_resource type="Texture2D" uid="uid://cvvkiffjo4lg7" path="res://assets/art/ui/window/square.png" id="9_ix5uu"]
+[ext_resource type="Texture2D" uid="uid://d4axoy5yaecq" path="res://assets/art/_placeholder/characters/knight.tres" id="10_urfyj"]
+[ext_resource type="LabelSettings" uid="uid://bulgfftvrmhbp" path="res://src/resources/styles/main_theme/label_styles/normal/level_text.tres" id="11_oykwg"]
+[ext_resource type="LabelSettings" uid="uid://bmveep3fvylut" path="res://src/resources/styles/main_theme/label_styles/normal/level_number.tres" id="12_k80a1"]
+[ext_resource type="StyleBox" uid="uid://cy22l7442e7ev" path="res://src/resources/styles/main_theme/box_flat/rectangular/level_bar_background.tres" id="13_whuty"]
+[ext_resource type="StyleBox" uid="uid://cxr33y8etjau2" path="res://src/resources/styles/main_theme/box_flat/rectangular/level_bar_fill.tres" id="14_1u7g6"]
+[ext_resource type="PackedScene" uid="uid://c18gogyry54jq" path="res://src/ui/hud/inset_inventory_slot.tscn" id="15_4gbab"]
+[ext_resource type="StyleBox" uid="uid://beidbllctii1" path="res://src/resources/styles/main_theme/box_flat/rectangular/borders/open_top_border_2px.tres" id="15_dfkeh"]
+[ext_resource type="Texture2D" uid="uid://fnbeuh7ipmyd" path="res://assets/art/_placeholder/equipment/chest.tres" id="16_w2csp"]
+[ext_resource type="Texture2D" uid="uid://c6ridywud11mq" path="res://assets/art/_placeholder/buttons/upgrades.tres" id="17_3drmk"]
+[ext_resource type="Texture2D" uid="uid://bef17au3xtmxc" path="res://assets/art/_placeholder/buttons/map.tres" id="18_wxdvq"]
+[ext_resource type="Texture2D" uid="uid://cnjisxwifbrjp" path="res://assets/art/_placeholder/buttons/sort.tres" id="19_4w1vu"]
+
+[node name="InventoryWindow" type="Window" unique_id=896528648 node_paths=PackedStringArray("action_buttons")]
+oversampling_override = 1.0
+position = Vector2i(0, 36)
+size = Vector2i(310, 429)
+script = ExtResource("1_4gbab")
+action_buttons = [NodePath("InventoryPanel/VBoxContainer/MarginContainer2/HBoxContainer/Stack"), NodePath("InventoryPanel/VBoxContainer/MarginContainer2/HBoxContainer/Map")]
+metadata/_custom_type_script = "uid://cmockf1csmwrt"
+
+[node name="InventoryPanel" type="PanelContainer" parent="." unique_id=1923592201]
+custom_maximum_size = Vector2(310, -1)
+offset_right = 310.0
+offset_bottom = 429.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("2_dfkeh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InventoryPanel" unique_id=658463068]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Banner" type="TextureRect" parent="InventoryPanel/VBoxContainer" unique_id=2115371260]
+texture_filter = 1
+custom_minimum_size = Vector2(306, 30)
+custom_maximum_size = Vector2(306, 30)
+layout_mode = 2
+texture = ExtResource("3_4gbab")
+expand_mode = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="TitleLabel" type="Label" parent="InventoryPanel/VBoxContainer/Banner" unique_id=490645207]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -11.5
+offset_right = 192.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "KAHRAMAN"
+label_settings = ExtResource("4_xdl55")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" parent="InventoryPanel/VBoxContainer" unique_id=563756529 instance=ExtResource("5_dfkeh")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="InventoryPanel/VBoxContainer" unique_id=1210083006]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="Items" type="VBoxContainer" parent="InventoryPanel/VBoxContainer/MarginContainer" unique_id=312261640]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Character" type="PanelContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items" unique_id=1528801094]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("2_dfkeh")
+
+[node name="MarginContainer" type="MarginContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character" unique_id=1685150261]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Character" type="HBoxContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer" unique_id=24673878]
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="HFlowContainer" type="HFlowContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character" unique_id=1162276071]
+custom_minimum_size = Vector2(113, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+last_wrap_alignment = 2
+
+[node name="Headset" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=1350450400 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+allowed_equipment_types = 1
+
+[node name="Chestplate" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=916097044 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+allowed_equipment_types = 2
+
+[node name="Leggins" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=1909765361 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+allowed_equipment_types = 4
+
+[node name="WeaponLeft" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=1417877315 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="Hand" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=668676658 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="WeaponRight" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=2127954131 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="Foot" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=1273808282 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character" unique_id=1986511553]
+custom_maximum_size = Vector2(74.455, -1)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("7_y7w0m")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer" unique_id=1677130134]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer" unique_id=1363579507]
+custom_minimum_size = Vector2(106.225, 0)
+layout_mode = 2
+
+[node name="Name" type="Label" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/PanelContainer" unique_id=654533626]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "KARAKTER"
+label_settings = ExtResource("8_557j8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer" unique_id=73521144]
+self_modulate = Color(0.13333334, 0.1254902, 0.20392157, 1)
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+texture = ExtResource("9_ix5uu")
+
+[node name="Icon" type="TextureRect" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/TextureRect" unique_id=2045126999]
+texture_filter = 1
+custom_minimum_size = Vector2(55, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -28.5
+offset_top = -50.555
+offset_right = 26.500015
+offset_bottom = 13.445
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("10_urfyj")
+stretch_mode = 4
+
+[node name="CharacterInfo" type="VBoxContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/TextureRect" unique_id=2054618287]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Level" type="VBoxContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/TextureRect/CharacterInfo" unique_id=1061600907]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/TextureRect/CharacterInfo/Level" unique_id=1174588463]
+layout_mode = 2
+alignment = 1
+
+[node name="LevelLabel" type="Label" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/TextureRect/CharacterInfo/Level/HBoxContainer" unique_id=1941960149]
+self_modulate = Color(0.80831814, 0.6782338, 0.07246453, 1)
+layout_mode = 2
+text = "Lv."
+label_settings = ExtResource("11_oykwg")
+horizontal_alignment = 1
+
+[node name="LevelLabel2" type="Label" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/TextureRect/CharacterInfo/Level/HBoxContainer" unique_id=357779794]
+layout_mode = 2
+text = "01"
+label_settings = ExtResource("12_k80a1")
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/TextureRect/CharacterInfo/Level" unique_id=1744043656]
+layout_mode = 2
+theme_override_constants/margin_left = 9
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 9
+theme_override_constants/margin_bottom = 6
+
+[node name="XPBar" type="ProgressBar" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/PanelContainer/VBoxContainer/TextureRect/CharacterInfo/Level/MarginContainer" unique_id=309960588]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+theme_override_styles/background = ExtResource("13_whuty")
+theme_override_styles/fill = ExtResource("14_1u7g6")
+value = 15.0
+show_percentage = false
+
+[node name="Accessories" type="GridContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character" unique_id=1163155098]
+layout_mode = 2
+size_flags_vertical = 4
+columns = 2
+
+[node name="Gem" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=1051345892 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="Crown" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=104832057 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="Cloak" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=746801914 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="Necklace" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=1621871795 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="Quiver" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=946640254 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="Ring" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=271042293 instance=ExtResource("6_h1ca2")]
+custom_maximum_size = Vector2(35, 35)
+layout_mode = 2
+
+[node name="InventorySlots" type="PanelContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items" unique_id=1414490036]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("15_dfkeh")
+
+[node name="MarginContainer" type="MarginContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots" unique_id=855230343]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Inventory" type="GridContainer" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer" unique_id=1652330995]
+custom_maximum_size = Vector2(270, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+columns = 7
+
+[node name="UI Slot" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2070671675 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot2" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1557530235 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot3" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1253748783 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot4" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=448040197 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot5" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=412796461 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot6" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1059343427 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot7" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=772744588 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot8" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=290864501 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot9" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1243001742 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot10" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=878335807 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot11" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1696998560 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot12" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=103622789 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot13" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=163636080 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot14" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1666372615 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot15" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=803845339 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot16" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1308877276 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot17" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=945996488 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot18" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2020930747 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot19" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=783223451 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot20" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=718004350 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot21" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=579926066 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot22" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2046221942 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot23" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2004783516 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot24" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=109433888 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot25" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=215949952 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot26" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=428112786 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot27" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=562573134 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot28" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1108320587 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot29" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2119832645 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot30" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1954886699 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot31" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1754265087 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot32" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=883914225 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot33" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1930154217 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot34" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=941170434 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot35" parent="InventoryPanel/VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2093670989 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="HSeparator2" parent="InventoryPanel/VBoxContainer" unique_id=1316624779 instance=ExtResource("5_dfkeh")]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="InventoryPanel/VBoxContainer" unique_id=1790570140]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="InventoryPanel/VBoxContainer/MarginContainer2" unique_id=1786701683]
+custom_maximum_size = Vector2(295, -1)
+layout_mode = 2
+alignment = 1
+
+[node name="Stack" type="Button" parent="InventoryPanel/VBoxContainer/MarginContainer2/HBoxContainer" unique_id=2106553406]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("16_w2csp")
+
+[node name="Upgrades" type="Button" parent="InventoryPanel/VBoxContainer/MarginContainer2/HBoxContainer" unique_id=754344659]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("17_3drmk")
+
+[node name="Map" type="Button" parent="InventoryPanel/VBoxContainer/MarginContainer2/HBoxContainer" unique_id=1810931349]
+layout_mode = 2
+size_flags_horizontal = 4
+icon = ExtResource("18_wxdvq")
+
+[node name="Sort" type="Button" parent="InventoryPanel/VBoxContainer/MarginContainer2/HBoxContainer" unique_id=1281437532]
+layout_mode = 2
+size_flags_horizontal = 10
+icon = ExtResource("19_4w1vu")

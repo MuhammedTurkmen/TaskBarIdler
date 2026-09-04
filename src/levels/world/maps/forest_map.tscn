@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b04nlkqj550ch"]
+
+[node name="ForestMap" type="Node2D" unique_id=868057754]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=191132818]
+offset_right = 340.0
+offset_bottom = 60.0
+color = Color(0, 0.5670394, 0.085403316, 1)
+
+[node name="Background" type="Sprite2D" parent="." unique_id=2106604292]
+
+[node name="Trees" type="Node2D" parent="." unique_id=1090895042]
+
+[node name="Effects" type="Node2D" parent="." unique_id=364355790]
+
+[node name="Leaves" type="CPUParticles2D" parent="Effects" unique_id=1753213924]
+
+[node name="AmbientSound" type="AudioStreamPlayer2D" parent="." unique_id=1356346180]

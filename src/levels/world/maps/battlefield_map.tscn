@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dbk0ucmpawwks"]
+
+[node name="BattlefieldMap" type="Node2D" unique_id=868057754]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=775162817]
+offset_right = 340.0
+offset_bottom = 60.0
+color = Color(0.56559896, 0.18458587, 1, 1)
+
+[node name="Background" type="Sprite2D" parent="." unique_id=2106604292]
+
+[node name="Enemies" type="Node2D" parent="." unique_id=1090895042]
+
+[node name="Effects" type="Node2D" parent="." unique_id=364355790]
+
+[node name="Smoke" type="CPUParticles2D" parent="Effects" unique_id=1753213924]
+
+[node name="BattleMusic" type="AudioStreamPlayer2D" parent="." unique_id=1356346180]

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cytuhwbt0tg67"]
+
+[ext_resource type="StyleBox" uid="uid://bvwuv83uof6s7" path="res://src/resources/styles/main_theme/box_line/seperator_2px.tres" id="1_fauxe"]
+
+[node name="HSeparator" type="HSeparator" unique_id=563756529]
+theme_override_constants/separation = 2
+theme_override_styles/separator = ExtResource("1_fauxe")

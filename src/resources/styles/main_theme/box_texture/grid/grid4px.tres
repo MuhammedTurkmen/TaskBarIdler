@@ -1,0 +1,13 @@
+[gd_resource type="StyleBoxTexture" format=3 uid="uid://g7inlpl31nvk"]
+
+[ext_resource type="Texture2D" uid="uid://b4kvr712jrpo" path="res://assets/art/ui/window/grid/new_grid.png" id="1_0ofy5"]
+
+[resource]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+texture = ExtResource("1_0ofy5")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+region_rect = Rect2(0, 0, 48, 48)

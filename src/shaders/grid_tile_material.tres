@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://de1c0tlv1iv2w"]
+
+[ext_resource type="Shader" uid="uid://nhgu1tj332a3" path="res://src/shaders/grid_tile.gdshader" id="1_klnhk"]
+
+[resource]
+shader = ExtResource("1_klnhk")
+shader_parameter/cell_size_px = Vector2(35, 35)
+shader_parameter/line_width_px = Vector2(4, 4)
+shader_parameter/offset_px = Vector2(0, 0)
+shader_parameter/line_color = Color(0.84739166, 0.01712379, 0.1903398, 1)
+shader_parameter/cut_right_px = 0
+shader_parameter/cut_bottom_px = 0
