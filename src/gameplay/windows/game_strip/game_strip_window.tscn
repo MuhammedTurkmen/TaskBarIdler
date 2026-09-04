@@ -7,59 +7,49 @@
 [ext_resource type="Texture2D" uid="uid://c4uwgma0q2pfk" path="res://assets/art/_placeholder/actions/fishing_rod.tres" id="6_oopfy"]
 [ext_resource type="Texture2D" uid="uid://dyvjwq68jwmqc" path="res://assets/art/_placeholder/buttons/open.tres" id="7_abrso"]
 
-[node name="GameStripWindow" type="Window" unique_id=28043457 node_paths=PackedStringArray("action_buttons")]
-oversampling_override = 1.0
-position = Vector2i(0, 36)
-size = Vector2i(340, 100)
-script = ExtResource("1_opekr")
-action_buttons = [NodePath("PanelContainer/VBoxContainer/HBoxContainer/Open")]
-metadata/_custom_type_script = "uid://cmockf1csmwrt"
-
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=296874821]
-custom_minimum_size = Vector2(0, 100)
+[node name="GameStripPanel" type="PanelContainer" unique_id=296874821 node_paths=PackedStringArray("action_buttons")]
+z_index = 100
+custom_minimum_size = Vector2(340, 100)
 custom_maximum_size = Vector2(340, -1)
 offset_right = 340.0
 offset_bottom = 100.0
+script = ExtResource("1_opekr")
+action_buttons = [NodePath("VBoxContainer/HBoxContainer/Battlefield"), NodePath("VBoxContainer/HBoxContainer/Mining"), NodePath("VBoxContainer/HBoxContainer/Woodcutting"), NodePath("VBoxContainer/HBoxContainer/Fishing"), NodePath("VBoxContainer/HBoxContainer/Open")]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1705433592]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1705433592]
 custom_minimum_size = Vector2(375, 0)
 layout_mode = 2
+theme_override_constants/separation = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=755337081]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=755337081]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Battlefield" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=929366691]
+[node name="Battlefield" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=929366691]
 layout_mode = 2
 icon = ExtResource("3_0orst")
 
-[node name="Mining" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=443068226]
+[node name="Mining" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=443068226]
 layout_mode = 2
 icon = ExtResource("5_oopfy")
 
-[node name="Woodcutting" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=675365479]
+[node name="Woodcutting" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=675365479]
 layout_mode = 2
 icon = ExtResource("4_kny8e")
 
-[node name="Fishing" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1630363028]
+[node name="Fishing" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1630363028]
 layout_mode = 2
 icon = ExtResource("6_oopfy")
 
-[node name="Open" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=757865208]
+[node name="Open" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=757865208]
 layout_mode = 2
 size_flags_horizontal = 10
 icon = ExtResource("7_abrso")
 
-[node name="Battlefield" type="Control" parent="PanelContainer/VBoxContainer" unique_id=803263725]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer" unique_id=755958431]
 layout_mode = 2
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="PanelContainer/VBoxContainer/Battlefield" unique_id=755958431]
-layout_mode = 0
-offset_top = -4.0
-offset_right = 340.0
-offset_bottom = 56.0
-
-[node name="SubViewport" type="SubViewport" parent="PanelContainer/VBoxContainer/Battlefield/SubViewportContainer" unique_id=1542083346]
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/SubViewportContainer" unique_id=1542083346]
 handle_input_locally = false
 size = Vector2i(340, 60)
 render_target_update_mode = 4

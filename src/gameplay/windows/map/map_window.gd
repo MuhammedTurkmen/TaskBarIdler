@@ -1,17 +1,20 @@
-extends DraggableWindow
+extends DraggablePanel
 
 @export var map_buttons: Array[Button] = []
 
 func _ready():
 	super._ready()
 	_setup_map_buttons()
-	hide()
+	hide()  # Başlangıçta gizli
+
+func _setup_panel():
+	custom_minimum_size = Vector2(310, 429)
+	z_index = 80
 
 func _setup_map_buttons():
 	if map_buttons.is_empty():
 		return
 	
-	# Buton indekslerine göre konum eşleştirmesi
 	var location_map = [
 		GameManager.Location.BATTLEFIELD, 
 		GameManager.Location.MINE,        

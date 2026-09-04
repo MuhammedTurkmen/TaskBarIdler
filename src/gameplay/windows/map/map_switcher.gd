@@ -16,10 +16,15 @@ extends VBoxContainer
 
 func _ready() -> void:
 	for i in range(buttons.size()):
-		buttons[i].pressed.connect(func(): switch_tab(i))
+		if buttons[i] and not buttons[i].pressed.is_connected(_on_button_pressed):
+			buttons[i].pressed.connect(_on_button_pressed.bind(i))
 	
-	switch_tab(0) 
+	switch_tab(0)
+
+func _on_button_pressed(index: int):
+	switch_tab(index)
 
 func switch_tab(index: int) -> void:
 	for i in range(tabs.size()):
-		tabs[i].visible = (i == index)
+		if tabs[i]:
+			tabs[i].visible = (i == index)

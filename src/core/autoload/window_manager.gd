@@ -1,7 +1,8 @@
+# window_manager.gd
 extends Node
 
-var windows: Dictionary = {}
-var window_scenes: Dictionary = {
+var panels: Dictionary = {}
+var panel_scenes: Dictionary = {
 	"game_strip": preload("res://src/gameplay/windows/game_strip/game_strip_window.tscn"),
 	"map_panel": preload("res://src/gameplay/windows/map/map_window.tscn"),
 	"hero": preload("res://src/gameplay/windows/hero/hero_window.tscn"),
@@ -21,93 +22,132 @@ enum PositionMode {
 var current_position_mode: PositionMode = PositionMode.CENTER
 
 func _ready():
-	_create_all_windows.call_deferred()
+	_create_all_panels.call_deferred()
 
-# window_manager.gd'a eklenecek
 func _process(_delta: float) -> void:
 	# Escape tuşu ile drag'ı iptal et
 	if Input.is_action_just_pressed("ui_cancel") and DragManager.is_dragging:
 		DragManager.cancel_drag()
 
-func _create_all_windows():
-	_create_window("game_strip")
-	_create_window("hero")
-	_create_window("stack")
-	_create_window("map_panel")
+func _create_all_panels():
+	_create_panel("game_strip")
+	_create_panel("hero")
+	_create_panel("stack")
+	_create_panel("map_panel")
 	
-	windows["game_strip"].show()
-	windows["hero"].hide()
-	windows["stack"].hide()
-	windows["map_panel"].hide()
+	# Başlangıç görünürlük durumları
+	panels["game_strip"].visible = true
+	panels["hero"].visible = false
+	panels["stack"].visible = false
+	panels["map_panel"].visible = false
 	
-	_setup_window_attachments()
+	_setup_panel_attachments()
 	_set_position_mode(PositionMode.CENTER)
 
-func _create_window(id: String):
-	var window_instance = window_scenes[id].instantiate()
-	get_tree().root.add_child(window_instance)
-	windows[id] = window_instance
-
-func _setup_window_attachments():
-	var game_strip = windows["game_strip"]
-	var hero = windows["hero"]
-	var stack = windows["stack"]
-	var map_panel = windows["map_panel"]
+func _create_panel(id: String):
+	var panel_instance = panel_scenes[id].instantiate()
 	
-	game_strip.attach_window(hero, Vector2i(0, -hero.size.y - INVENTORY_GAP))
-	hero.attach_window(stack, Vector2i(-stack.size.x - SIDE_PANEL_GAP, 0))
-	hero.attach_window(map_panel, Vector2i(hero.size.x + SIDE_PANEL_GAP, 0))
+	# Paneli UILayer'a ekle (veya direkt root'a)
+	var ui_layer = _get_or_create_ui_layer()
+	ui_layer.add_child(panel_instance)
+	
+	panels[id] = panel_instance
+	
+	# Panel sinyallerini bağla
+	if panel_instance is DraggablePanel:
+		panel_instance.panel_closed.connect(_on_panel_closed.bind(id))
+		panel_instance.panel_opened.connect(_on_panel_opened.bind(id))
+
+func _get_or_create_ui_layer() -> CanvasLayer:
+	var ui_layer = get_tree().current_scene.get_node_or_null("UILayer")
+	
+	if not ui_layer:
+		ui_layer = CanvasLayer.new()
+		ui_layer.name = "UILayer"
+		ui_layer.layer = 10
+		get_tree().current_scene.add_child(ui_layer)
+	
+	return ui_layer
+
+func _setup_panel_attachments():
+	var game_strip = panels["game_strip"]
+	var hero = panels["hero"]
+	var stack = panels["stack"]
+	var map_panel = panels["map_panel"]
+	
+	# Panelleri birbirine bağla
+	if game_strip is DraggablePanel and hero is DraggablePanel:
+		game_strip.attach_panel(hero, Vector2(0, -hero.size.y - INVENTORY_GAP))
+	
+	if hero is DraggablePanel:
+		if stack is DraggablePanel:
+			hero.attach_panel(stack, Vector2(-stack.size.x - SIDE_PANEL_GAP, 0))
+		if map_panel is DraggablePanel:
+			hero.attach_panel(map_panel, Vector2(hero.size.x + SIDE_PANEL_GAP, 0))
 
 func _set_position_mode(mode: PositionMode):
 	current_position_mode = mode
 	_update_all_positions()
 
 func _update_all_positions():
-	var screen_size = DisplayServer.window_get_size()
-	var game_strip = windows["game_strip"]
-	var hero = windows["hero"]
-	var stack = windows["stack"]
-	var map_panel = windows["map_panel"]
+	var screen_size = get_viewport().get_visible_rect().size
+	var game_strip = panels["game_strip"]
+	var hero = panels["hero"]
+	var stack = panels["stack"]
+	var map_panel = panels["map_panel"]
 	
 	match current_position_mode:
 		PositionMode.CENTER:
-			game_strip.position = Vector2i(
+			# GameStrip - altta ortada
+			game_strip.position = Vector2(
 				(screen_size.x - game_strip.size.x) / 2,
 				screen_size.y - game_strip.size.y - SIDE_PANEL_GAP
 			)
 			
-			hero.position = Vector2i(
+			# Hero - game_strip'in üstünde ortada
+			hero.position = Vector2(
 				game_strip.position.x + (game_strip.size.x - hero.size.x) / 2,
 				game_strip.position.y - hero.size.y - INVENTORY_GAP
 			)
 			
-			stack.position = Vector2i(
+			# Stack - hero'nun solunda
+			stack.position = Vector2(
 				hero.position.x - stack.size.x - SIDE_PANEL_GAP,
 				hero.position.y
 			)
 			
-			map_panel.position = Vector2i(
+			# Map - hero'nun sağında
+			map_panel.position = Vector2(
 				hero.position.x + hero.size.x + SIDE_PANEL_GAP,
 				hero.position.y
 			)
 		
 		PositionMode.LEFT:
-			game_strip.position = Vector2i(
+			# GameStrip - sol altta
+			game_strip.position = Vector2(
 				SIDE_PANEL_GAP,
 				screen_size.y - game_strip.size.y - SIDE_PANEL_GAP
 			)
 			
-			hero.position = Vector2i(
+			# Hero - sol üstte
+			hero.position = Vector2(
 				SIDE_PANEL_GAP,
 				game_strip.position.y - hero.size.y - INVENTORY_GAP
 			)
 			
-			stack.position = Vector2i(
-				hero.position.x - stack.size.x - SIDE_PANEL_GAP,
-				hero.position.y
-			)
+			# Stack - hero'nun solunda (ekran dışına taşabilir, kontrol et)
+			var stack_x = hero.position.x - stack.size.x - SIDE_PANEL_GAP
+			if stack_x < SIDE_PANEL_GAP:
+				# Sola sığmıyorsa sağa koy
+				stack.position = Vector2(
+					hero.position.x + hero.size.x + SIDE_PANEL_GAP,
+					hero.position.y
+				)
+			else:
+				stack.position = Vector2(stack_x, hero.position.y)
 			
-			map_panel.position = Vector2i(
+			# Map - hero'nun sağında
+			map_panel.position = Vector2(
 				hero.position.x + hero.size.x + SIDE_PANEL_GAP,
 				hero.position.y
 			)
@@ -115,29 +155,106 @@ func _update_all_positions():
 	_update_attachment_offsets()
 
 func _update_attachment_offsets():
-	var game_strip = windows["game_strip"]
-	var hero = windows["hero"]
-	var stack = windows["stack"]
-	var map_panel = windows["map_panel"]
+	var game_strip = panels["game_strip"]
+	var hero = panels["hero"]
+	var stack = panels["stack"]
+	var map_panel = panels["map_panel"]
 	
-	game_strip.attached_offsets[hero] = hero.position - game_strip.position
-	hero.attached_offsets[stack] = stack.position - hero.position
-	hero.attached_offsets[map_panel] = map_panel.position - hero.position
+	if game_strip is DraggablePanel and hero is DraggablePanel:
+		game_strip.attached_offsets[hero] = hero.position - game_strip.position
+	
+	if hero is DraggablePanel:
+		if stack is DraggablePanel:
+			hero.attached_offsets[stack] = stack.position - hero.position
+		if map_panel is DraggablePanel:
+			hero.attached_offsets[map_panel] = map_panel.position - hero.position
 
-func show_window(id: String):
-	if windows.has(id):
+func show_panel(id: String):
+	if panels.has(id):
+		var panel = panels[id]
+		
+		# Özel gösterim mantığı
 		if id == "hero":
-			windows[id].show_inventory()
+			_show_hero_panel()
 		elif id == "stack":
-			windows[id].show()
-			windows[id].grab_focus()
+			_show_stack_panel()
 		else:
-			windows[id].show()
-			windows[id].grab_focus()
+			panel.visible = true
+			panel.z_index = _get_next_z_index()
+			panel.panel_opened.emit() if panel is DraggablePanel else null
 
-func hide_window(id: String):
-	if windows.has(id):
-		if id == "inventory":
-			windows[id].hide_inventory()
+func hide_panel(id: String):
+	if panels.has(id):
+		var panel = panels[id]
+		
+		# Özel gizleme mantığı
+		if id == "hero":
+			_hide_hero_panel()
 		else:
-			windows[id].hide()
+			panel.visible = false
+			panel.panel_closed.emit() if panel is DraggablePanel else null
+
+func toggle_panel(id: String):
+	if panels.has(id):
+		var panel = panels[id]
+		if panel.visible:
+			hide_panel(id)
+		else:
+			show_panel(id)
+
+func _show_hero_panel():
+	var hero = panels["hero"]
+	var stack = panels["stack"]
+	var map_panel = panels["map_panel"]
+	
+	# Hero paneli göster
+	hero.visible = true
+	hero.z_index = _get_next_z_index()
+	
+	# Bağlı panellerin durumunu kontrol et
+	if stack.visible:
+		stack.z_index = hero.z_index
+	if map_panel.visible:
+		map_panel.z_index = hero.z_index
+	
+	if hero is DraggablePanel:
+		hero.panel_opened.emit()
+
+func _hide_hero_panel():
+	var hero = panels["hero"]
+	var stack = panels["stack"]
+	var map_panel = panels["map_panel"]
+	
+	# Hero ve bağlı panelleri gizle
+	hero.visible = false
+	stack.visible = false
+	map_panel.visible = false
+	
+	if hero is DraggablePanel:
+		hero.panel_closed.emit()
+
+func _show_stack_panel():
+	var stack = panels["stack"]
+	stack.visible = true
+	stack.z_index = _get_next_z_index()
+	
+	if stack is DraggablePanel:
+		stack.panel_opened.emit()
+
+func _get_next_z_index() -> int:
+	var max_z = 0
+	for panel in panels.values():
+		if panel is Control and panel.z_index > max_z:
+			max_z = panel.z_index
+	return max_z + 1
+
+func _on_panel_closed(id: String):
+	# Panel kapatıldığında yapılacak işlemler
+	print("Panel closed: ", id)
+
+func _on_panel_opened(id: String):
+	# Panel açıldığında yapılacak işlemler
+	print("Panel opened: ", id)
+
+func get_panel(id: String) -> Control:
+	return panels.get(id)

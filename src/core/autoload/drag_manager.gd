@@ -1,5 +1,6 @@
 # drag_manager.gd
-extends CanvasLayer
+
+extends Node
 
 signal drag_started(item_data: ItemData, quantity: int)
 signal drag_ended()
@@ -9,64 +10,46 @@ var dragged_item: ItemData = null
 var dragged_quantity: int = 1
 var origin_slot: Control = null
 
-var preview_window: Window = null
+var drag_layer: CanvasLayer = null
+var preview_container: Control = null
 var preview_icon: TextureRect = null
 var preview_label: Label = null
 
-func _ready() -> void:
-	layer = 1000
-	create_preview_window()
-	move_preview_to_root()
+func _ready():
+	_setup_drag_layer()
+	_create_preview()
 
-func _process(_delta: float) -> void:
-	if is_dragging and preview_window:
-		update_preview_position()
-		# Her frame öne çek (garanti için)
-		preview_window.move_to_foreground()
-
-func move_preview_to_root() -> void:
-	if preview_window:
-		# Window'u root'a taşı
-		var root = get_tree().root
-		
-		# Önce mevcut parent'tan çıkar
-		if preview_window.get_parent():
-			preview_window.get_parent().remove_child(preview_window)
-		
-		# Root'a ekle
-		root.add_child.call_deferred(preview_window)
-		
-		# move_child yerine sadece move_to_foreground kullan
-		# root.move_child satırını KALDIRIN
-		
-		print("Preview Window root'a taşındı")
-		print("Root çocuk sayısı: ", root.get_child_count())
-
-func update_preview_position() -> void:
-	var mouse_pos = DisplayServer.mouse_get_position()
-	var offset = Vector2i(-22, -22)
+func _setup_drag_layer():
+	drag_layer = get_tree().current_scene.get_node_or_null("DragLayer")
 	
-	# Direkt global pozisyonu kullan
-	preview_window.position = mouse_pos + offset
+	if not drag_layer:
+		drag_layer = CanvasLayer.new()
+		drag_layer.name = "DragLayer"
+		drag_layer.layer = 1000
+		get_tree().current_scene.add_child(drag_layer)
 
-func create_preview_window() -> void:
-	preview_window = Window.new()
-	preview_window.name = "DragPreview"
-	preview_window.size = Vector2i(45, 45)
-	preview_window.borderless = true
-	preview_window.transparent = true
-	preview_window.transparent_bg = true
-	preview_window.unresizable = true
-	preview_window.always_on_top = true
-	preview_window.visible = false
-	# preview_window.gui_disable_input = true
-	preview_window.mouse_passthrough = true
+func _create_preview():
+	if not drag_layer:
+		return
 	
-	# Panel
+	# Preview container - SADECE ikon boyutunda, tüm ekranı kaplamaz
+	preview_container = Control.new()
+	preview_container.name = "DragPreview"
+	preview_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	preview_container.visible = false
+	preview_container.z_index = 1000
+	# Tam ekran yapma, sadece içerik boyutunda olsun
+	preview_container.custom_minimum_size = Vector2(40, 40)
+	preview_container.size = Vector2(40, 40)
+	drag_layer.add_child(preview_container)
+	
+	# Panel - sadece ikon etrafında küçük bir panel
 	var panel = PanelContainer.new()
 	panel.name = "Panel"
 	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	
 	var style = StyleBoxFlat.new()
 	style.bg_color = Color(0.1, 0.1, 0.1, 0.9)
@@ -78,30 +61,19 @@ func create_preview_window() -> void:
 	style.corner_radius_bottom_right = 3
 	panel.add_theme_stylebox_override("panel", style)
 	
-	preview_window.add_child(panel)
+	preview_container.add_child(panel)
 	
-	# Margin
-	var margin = MarginContainer.new()
-	margin.name = "Margin"
-	margin.add_theme_constant_override("margin_left", 5)
-	margin.add_theme_constant_override("margin_top", 5)
-	margin.add_theme_constant_override("margin_right", 5)
-	margin.add_theme_constant_override("margin_bottom", 5)
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
-	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(margin)
-	
-	# Icon
+	# Icon - sadece ikon boyutunda
 	preview_icon = TextureRect.new()
 	preview_icon.name = "Icon"
 	preview_icon.custom_minimum_size = Vector2(32, 32)
 	preview_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	preview_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	preview_icon.set_anchors_preset(Control.PRESET_FULL_RECT)
 	preview_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_child(preview_icon)
+	preview_icon.set_anchors_preset(Control.PRESET_FULL_RECT)
+	preview_container.add_child(preview_icon)
 	
-	# Quantity Label
+	# Quantity Label - sadece ikonun köşesinde
 	preview_label = Label.new()
 	preview_label.name = "Quantity"
 	preview_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -110,27 +82,33 @@ func create_preview_window() -> void:
 	preview_label.add_theme_color_override("font_color", Color.WHITE)
 	preview_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	preview_label.add_theme_constant_override("outline_size", 3)
-	preview_label.set_anchors_preset(Control.PRESET_FULL_RECT)
 	preview_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_child(preview_label)
+	preview_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	preview_container.add_child(preview_label)
 
-func start_drag(slot: Control, item: ItemData, quantity: int = 1) -> void:
+func _process(_delta: float):
+	if is_dragging and preview_container:
+		_update_preview_position()
+
+func _update_preview_position():
+	var mouse_pos = get_viewport().get_mouse_position()
+	var offset = Vector2(-22, -22)
+	preview_container.position = mouse_pos + offset
+
+func start_drag(slot: Control, item: ItemData, quantity: int = 1):
 	is_dragging = true
 	origin_slot = slot
 	dragged_item = item
 	dragged_quantity = quantity
 	
-	update_preview(item, quantity)
+	_update_preview(item, quantity)
 	
-	preview_window.visible = true
-	preview_window.move_to_foreground()
-	update_preview_position()
-	
-	print("Drag başladı - Preview görünür: ", preview_window.visible)
+	preview_container.visible = true
+	_update_preview_position()
 	
 	drag_started.emit(item, quantity)
 
-func update_preview(item: ItemData, quantity: int) -> void:
+func _update_preview(item: ItemData, quantity: int):
 	if preview_icon:
 		preview_icon.texture = item.icon if item else null
 	
@@ -142,23 +120,16 @@ func update_preview(item: ItemData, quantity: int) -> void:
 			preview_label.text = ""
 			preview_label.visible = false
 
-func update_position(pos: Vector2) -> void:
-	if is_dragging and preview_window:
-		preview_window.position = Vector2i(pos) - Vector2i(22, 22)
-
-func end_drag() -> void:
+func end_drag():
 	if not is_dragging:
 		return
-		
+	
 	is_dragging = false
 	dragged_item = null
 	dragged_quantity = 1
 	origin_slot = null
 	
-	if preview_window:
-		preview_window.visible = false
+	if preview_container:
+		preview_container.visible = false
 	
 	drag_ended.emit()
-
-func cancel_drag() -> void:
-	end_drag()

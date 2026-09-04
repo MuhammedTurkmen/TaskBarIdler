@@ -4,7 +4,7 @@
 
 [node name="ProjectExporterPanel" type="PanelContainer" unique_id=318558535]
 offset_right = 800.0
-offset_bottom = 350.0
+offset_bottom = 500.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_panel")
@@ -13,12 +13,17 @@ script = ExtResource("1_panel")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 5
+theme_override_constants/separation = 3
 
 [node name="FilterContainer" type="HBoxContainer" parent="VBox" unique_id=1621725504]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
+
+[node name="SearchContainer" type="HBoxContainer" parent="VBox" unique_id=123456789]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
 
 [node name="Tree" type="Tree" parent="VBox" unique_id=1329307588]
 layout_mode = 2

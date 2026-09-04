@@ -1,8 +1,8 @@
-extends DraggableWindow
+extends DraggablePanel
 
 func _ready():
 	super._ready()
-	_setup_window()
 
-func _setup_window():
-	pass
+func _setup_panel():
+	custom_minimum_size = Vector2(310, 429)
+	z_index = 70

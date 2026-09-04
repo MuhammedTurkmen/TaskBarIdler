@@ -11,27 +11,21 @@
 [ext_resource type="LabelSettings" uid="uid://dnpougdg66s7s" path="res://src/resources/styles/main_theme/label_styles/title/panel.tres" id="5_iwkgj"]
 [ext_resource type="PackedScene" uid="uid://cytuhwbt0tg67" path="res://src/ui/hud/h_separator_2px.tscn" id="6_jit1l"]
 
-[node name="MapPanel" type="Window" unique_id=1300867877]
-oversampling_override = 1.0
-position = Vector2i(0, 36)
-size = Vector2i(310, 429)
-script = ExtResource("1_k5b66")
-metadata/_custom_type_script = "uid://cmockf1csmwrt"
-
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=982341849]
+[node name="MapPanel" type="PanelContainer" unique_id=982341849]
 custom_minimum_size = Vector2(310, 429)
 offset_right = 310.0
 offset_bottom = 255.0
 theme_override_styles/panel = ExtResource("2_owvoa")
+script = ExtResource("1_k5b66")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1420230170]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1420230170]
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 2
 theme_override_constants/separation = 0
 script = ExtResource("2_4bd10")
 
-[node name="Banner" type="TextureRect" parent="PanelContainer/VBoxContainer" unique_id=821037627]
+[node name="Banner" type="TextureRect" parent="VBoxContainer" unique_id=821037627]
 texture_filter = 1
 custom_minimum_size = Vector2(308, 30)
 custom_maximum_size = Vector2(306, 30)
@@ -40,7 +34,7 @@ texture = ExtResource("4_iwkgj")
 expand_mode = 3
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/Banner" unique_id=255230510]
+[node name="Label" type="Label" parent="VBoxContainer/Banner" unique_id=255230510]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -58,22 +52,22 @@ label_settings = ExtResource("5_iwkgj")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSeparator" parent="PanelContainer/VBoxContainer" unique_id=563756529 instance=ExtResource("6_jit1l")]
+[node name="HSeparator" parent="VBoxContainer" unique_id=563756529 instance=ExtResource("6_jit1l")]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer" unique_id=2109387852]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2109387852]
 layout_mode = 2
 theme_override_constants/margin_top = 4
 
-[node name="MapPanel" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer" unique_id=1042517118]
+[node name="MapPanel" type="HBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=1042517118]
 custom_maximum_size = Vector2(-1, 450)
 layout_mode = 2
 
-[node name="Buttons" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel" unique_id=472921976]
+[node name="Buttons" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MapPanel" unique_id=472921976]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Battlefield" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=1762043117]
+[node name="Battlefield" type="Button" parent="VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=1762043117]
 custom_minimum_size = Vector2(40, 25)
 custom_maximum_size = Vector2(40, 25)
 layout_mode = 2
@@ -81,7 +75,7 @@ icon = ExtResource("2_tlmfq")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Mining" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=684487911]
+[node name="Mining" type="Button" parent="VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=684487911]
 custom_minimum_size = Vector2(40, 25)
 custom_maximum_size = Vector2(40, 25)
 layout_mode = 2
@@ -91,7 +85,7 @@ icon = ExtResource("4_inyqb")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Woodcutting" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=362057359]
+[node name="Woodcutting" type="Button" parent="VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=362057359]
 custom_minimum_size = Vector2(40, 25)
 custom_maximum_size = Vector2(40, 25)
 layout_mode = 2
@@ -99,7 +93,7 @@ icon = ExtResource("5_20y5h")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Fishing" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=1046310829]
+[node name="Fishing" type="Button" parent="VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=1046310829]
 custom_minimum_size = Vector2(40, 25)
 custom_maximum_size = Vector2(40, 25)
 layout_mode = 2
@@ -107,37 +101,37 @@ icon = ExtResource("3_4bd10")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Tabs" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel" unique_id=639518102]
+[node name="Tabs" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MapPanel" unique_id=639518102]
 layout_mode = 2
 
-[node name="Battlefield" type="PanelContainer" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Tabs" unique_id=784291392]
+[node name="Battlefield" type="PanelContainer" parent="VBoxContainer/MarginContainer/MapPanel/Tabs" unique_id=784291392]
 visible = false
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Tabs/Battlefield" unique_id=1288447401]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/MapPanel/Tabs/Battlefield" unique_id=1288447401]
 layout_mode = 2
 texture = ExtResource("2_tlmfq")
 
-[node name="Mining" type="PanelContainer" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Tabs" unique_id=2114532705]
+[node name="Mining" type="PanelContainer" parent="VBoxContainer/MarginContainer/MapPanel/Tabs" unique_id=2114532705]
 visible = false
 layout_mode = 2
 
-[node name="TextureRect2" type="TextureRect" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Tabs/Mining" unique_id=315714177]
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/MarginContainer/MapPanel/Tabs/Mining" unique_id=315714177]
 layout_mode = 2
 texture = ExtResource("4_inyqb")
 
-[node name="Woodcutting" type="PanelContainer" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Tabs" unique_id=1929252258]
+[node name="Woodcutting" type="PanelContainer" parent="VBoxContainer/MarginContainer/MapPanel/Tabs" unique_id=1929252258]
 visible = false
 layout_mode = 2
 
-[node name="TextureRect3" type="TextureRect" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Tabs/Woodcutting" unique_id=88964024]
+[node name="TextureRect3" type="TextureRect" parent="VBoxContainer/MarginContainer/MapPanel/Tabs/Woodcutting" unique_id=88964024]
 layout_mode = 2
 texture = ExtResource("5_20y5h")
 
-[node name="Fishing" type="PanelContainer" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Tabs" unique_id=556129178]
+[node name="Fishing" type="PanelContainer" parent="VBoxContainer/MarginContainer/MapPanel/Tabs" unique_id=556129178]
 visible = false
 layout_mode = 2
 
-[node name="TextureRect4" type="TextureRect" parent="PanelContainer/VBoxContainer/MarginContainer/MapPanel/Tabs/Fishing" unique_id=576813778]
+[node name="TextureRect4" type="TextureRect" parent="VBoxContainer/MarginContainer/MapPanel/Tabs/Fishing" unique_id=576813778]
 layout_mode = 2
 texture = ExtResource("3_4bd10")
