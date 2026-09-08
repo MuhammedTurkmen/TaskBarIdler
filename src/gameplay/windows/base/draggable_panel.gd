@@ -15,12 +15,20 @@ var attached_offsets: Dictionary = {}
 # Panel grup bilgileri
 var is_group_leader: bool = false
 
-# Ekran sınırları için margin
-const SCREEN_MARGIN: float = 10.0
+# Ekran sınırları için padding
+const SCREEN_PADDING: float = 10.0
+
+# Dikey taşma için deadzone (ayarlanabilir)
+var vertical_deadzone: float = 50.0
+
+# Game strip'in default pozisyonu (ortaya dönmek için)
+var default_x_position: float = 0.0
 
 func _ready():
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_setup_panel()
+	# Default pozisyonu kaydet
+	default_x_position = position.x
 
 func _setup_panel():
 	pass
@@ -41,13 +49,12 @@ func _gui_input(event):
 		var new_position = get_global_mouse_position() - drag_offset
 		
 		if is_group_leader:
-			# Ana paneli ekran sınırlarına göre sınırla
+			# Game strip panel her zaman ekran sınırları içinde kalır
 			global_position = _clamp_to_screen(new_position, self)
 			_update_attached_panels()
-			_check_attached_panels_bounds()
 		else:
-			# Bağımsız panel - sadece kendini sınırla
-			global_position = _clamp_to_screen(new_position, self)
+			# Diğer paneller serbestçe hareket edebilir
+			global_position = new_position
 			_update_attached_panels()
 		
 		accept_event()
@@ -56,13 +63,35 @@ func _clamp_to_screen(position: Vector2, panel: Control) -> Vector2:
 	var screen_size = DisplayServer.screen_get_size()
 	var panel_size = panel.size
 	
-	position.x = clamp(position.x, SCREEN_MARGIN, screen_size.x - panel_size.x - SCREEN_MARGIN)
-	position.y = clamp(position.y, SCREEN_MARGIN, screen_size.y - panel_size.y - SCREEN_MARGIN)
+	position.x = clamp(position.x, SCREEN_PADDING, screen_size.x - panel_size.x - SCREEN_PADDING)
+	position.y = clamp(position.y, SCREEN_PADDING, screen_size.y - panel_size.y - SCREEN_PADDING)
 	
 	return position
 
-func _check_attached_panels_bounds():
+func _fix_all_panel_positions():
+	if not is_group_leader:
+		return
+	
+	# Önce game strip'i ekran sınırlarına clamp et
+	global_position = _clamp_to_screen(global_position, self)
+	_update_attached_panels()
+	
+	# Taşan panelleri kontrol et
+	var has_overflow = _check_panel_overflow()
+	
+	if has_overflow:
+		# Taşma varsa düzelt
+		_fix_overflow()
+	else:
+		# Taşma yoksa game strip'i ortaya döndür (sadece x ekseninde)
+		_return_to_center_x()
+	
+	# Son olarak bağlı panelleri güncelle
+	_update_attached_panels()
+
+func _check_panel_overflow() -> bool:
 	var screen_size = DisplayServer.screen_get_size()
+	var has_overflow = false
 	
 	for panel in attached_panels:
 		if not panel.visible:
@@ -70,123 +99,101 @@ func _check_attached_panels_bounds():
 		
 		var panel_pos = panel.global_position
 		var panel_size = panel.size
-		var adjusted = false
 		
-		# Sol sınır kontrolü
-		if panel_pos.x < SCREEN_MARGIN:
-			global_position.x += (SCREEN_MARGIN - panel_pos.x)
-			adjusted = true
+		# Sol taşma kontrolü
+		if panel_pos.x < SCREEN_PADDING:
+			return true
 		
-		# Sağ sınır kontrolü
-		if panel_pos.x + panel_size.x > screen_size.x - SCREEN_MARGIN:
-			global_position.x -= (panel_pos.x + panel_size.x - (screen_size.x - SCREEN_MARGIN))
-			adjusted = true
+		# Sağ taşma kontrolü
+		if panel_pos.x + panel_size.x > screen_size.x - SCREEN_PADDING:
+			return true
 		
-		# Üst sınır kontrolü
-		if panel_pos.y < SCREEN_MARGIN:
-			global_position.y += (SCREEN_MARGIN - panel_pos.y)
-			adjusted = true
+		# Üst taşma kontrolü (deadzone ile)
+		if panel_pos.y < vertical_deadzone:
+			return true
 		
-		# Alt sınır kontrolü
-		if panel_pos.y + panel_size.y > screen_size.y - SCREEN_MARGIN:
-			global_position.y -= (panel_pos.y + panel_size.y - (screen_size.y - SCREEN_MARGIN))
-			adjusted = true
-		
-		if adjusted:
-			_update_attached_panels()
-			break
+		# Alt taşma kontrolü (deadzone ile)
+		if panel_pos.y + panel_size.y > screen_size.y - vertical_deadzone:
+			return true
+	
+	return false
 
-func _fix_all_panel_positions():
-	if not is_group_leader:
-		return
-	
-	# Ana paneli sınırla
-	global_position = _clamp_to_screen(global_position, self)
-	
-	# Bağlı panelleri güncelle
-	_update_attached_panels()
-	
-	# Bağlı panellerin durumunu kontrol et
-	_fix_attached_panels_positions()
-
-func _fix_attached_panels_positions():
+func _fix_overflow():
 	var screen_size = DisplayServer.screen_get_size()
 	
-	# Hangi tarafta dışarıda kalan panel var?
-	var needs_left_fix = false
-	var needs_right_fix = false
-	var needs_top_fix = false
-	var needs_bottom_fix = false
+	# Taşan panelleri bul
+	var left_overflow = false
+	var right_overflow = false
+	var top_overflow = false
+	var bottom_overflow = false
 	
 	for panel in attached_panels:
 		if not panel.visible:
 			continue
 		
-		if panel.global_position.x < SCREEN_MARGIN:
-			needs_left_fix = true
-		if panel.global_position.x + panel.size.x > screen_size.x - SCREEN_MARGIN:
-			needs_right_fix = true
-		if panel.global_position.y < SCREEN_MARGIN:
-			needs_top_fix = true
-		if panel.global_position.y + panel.size.y > screen_size.y - SCREEN_MARGIN:
-			needs_bottom_fix = true
+		var panel_pos = panel.global_position
+		var panel_size = panel.size
+		
+		if panel_pos.x < SCREEN_PADDING:
+			left_overflow = true
+		if panel_pos.x + panel_size.x > screen_size.x - SCREEN_PADDING:
+			right_overflow = true
+		if panel_pos.y < vertical_deadzone:
+			top_overflow = true
+		if panel_pos.y + panel_size.y > screen_size.y - vertical_deadzone:
+			bottom_overflow = true
 	
 	# Yatay düzeltme
-	if needs_left_fix:
+	if left_overflow:
 		_reposition_panels_left()
-	elif needs_right_fix:
+	elif right_overflow:
 		_reposition_panels_right()
 	
 	# Dikey düzeltme
-	if needs_top_fix:
-		_reposition_panels_bottom()
-	elif needs_bottom_fix:
-		_reposition_panels_top()
+	if top_overflow:
+		_reposition_panels_below_game_strip()
+	elif bottom_overflow:
+		_reposition_panels_above_game_strip()
 
 func _reposition_panels_left():
-	var screen_size = DisplayServer.screen_get_size()
-	
-	# Görünür panelleri x pozisyonuna göre sırala
 	var sorted_panels = _get_visible_panels_sorted_by_x()
 	
 	if sorted_panels.is_empty():
 		return
 	
-	# En soldaki paneli ekranın soluna yasla
-	var current_x = SCREEN_MARGIN
+	# En soldaki paneli padding'e yasla
+	var current_x = SCREEN_PADDING
 	for panel in sorted_panels:
 		panel.global_position.x = current_x
 		current_x += panel.size.x + 5
 	
-	# Game strip paneli de sola yasla
-	global_position.x = SCREEN_MARGIN
+	# Game strip'i de sola yasla
+	global_position.x = SCREEN_PADDING
 	
 	# Offset'leri güncelle
 	_update_offsets_after_reposition()
 
 func _reposition_panels_right():
 	var screen_size = DisplayServer.screen_get_size()
-	
-	# Görünür panelleri x pozisyonuna göre sırala
 	var sorted_panels = _get_visible_panels_sorted_by_x()
 	
 	if sorted_panels.is_empty():
 		return
 	
-	# En sağdaki paneli ekranın sağına yasla
-	var current_x = screen_size.x - SCREEN_MARGIN
+	# En sağdaki paneli padding'e yasla
+	var current_x = screen_size.x - SCREEN_PADDING
 	for i in range(sorted_panels.size() - 1, -1, -1):
 		var panel = sorted_panels[i]
 		panel.global_position.x = current_x - panel.size.x
 		current_x -= panel.size.x + 5
 	
-	# Game strip paneli de sağa yasla
-	global_position.x = screen_size.x - size.x - SCREEN_MARGIN
+	# Game strip'i de sağa yasla
+	global_position.x = screen_size.x - size.x - SCREEN_PADDING
 	
 	# Offset'leri güncelle
 	_update_offsets_after_reposition()
 
-func _reposition_panels_bottom():
+func _reposition_panels_below_game_strip():
 	# Panelleri game strip'in altına taşı
 	for panel in attached_panels:
 		if panel.visible:
@@ -195,7 +202,7 @@ func _reposition_panels_bottom():
 	# Offset'leri güncelle
 	_update_offsets_after_reposition()
 
-func _reposition_panels_top():
+func _reposition_panels_above_game_strip():
 	# Panelleri game strip'in üstüne taşı
 	for panel in attached_panels:
 		if panel.visible:
@@ -203,6 +210,15 @@ func _reposition_panels_top():
 	
 	# Offset'leri güncelle
 	_update_offsets_after_reposition()
+
+func _return_to_center_x():
+	var screen_size = DisplayServer.screen_get_size()
+	
+	# Game strip'i x ekseninde ortaya döndür
+	global_position.x = (screen_size.x - size.x) / 2
+	
+	# Bağlı panelleri güncelle
+	_update_attached_panels()
 
 func _get_visible_panels_sorted_by_x() -> Array:
 	var visible_panels = []
