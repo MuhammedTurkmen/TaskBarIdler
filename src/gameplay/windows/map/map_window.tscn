@@ -72,7 +72,7 @@ layout_mode = 2
 
 [node name="Buttons" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MapPanel" unique_id=472921976]
 layout_mode = 2
-theme_override_constants/separation = 1
+theme_override_constants/separation = 5
 
 [node name="Battlefield" type="Button" parent="VBoxContainer/MarginContainer/MapPanel/Buttons" unique_id=1762043117]
 custom_minimum_size = Vector2(40, 25)

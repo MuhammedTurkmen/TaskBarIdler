@@ -20,7 +20,8 @@ var current_scale: float = 1.0
 # Pozisyon modları
 enum PositionMode {
 	CENTER,
-	LEFT
+	LEFT,
+	RIGHT
 }
 
 var current_position_mode: PositionMode = PositionMode.CENTER
@@ -102,6 +103,10 @@ func _setup_panel_attachments():
 	var hero = panels["hero"]
 	var stack = panels["stack"]
 	var map_panel = panels["map_panel"]
+	
+	# Game strip'i grup lideri yap
+	if game_strip is DraggablePanel:
+		game_strip.is_group_leader = true
 	
 	# Panelleri birbirine bağla
 	if game_strip is DraggablePanel and hero is DraggablePanel:
@@ -186,6 +191,10 @@ func _update_all_positions():
 			)
 	
 	_update_attachment_offsets()
+	
+	# Pozisyonlar güncellendikten sonra sınırları kontrol et
+	if game_strip is DraggablePanel and game_strip.is_group_leader:
+		game_strip._fix_all_panel_positions()
 
 func _update_attachment_offsets():
 	var game_strip = panels["game_strip"]

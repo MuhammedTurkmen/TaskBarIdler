@@ -414,6 +414,7 @@ theme_override_constants/margin_bottom = 5
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer2" unique_id=1786701683]
 custom_maximum_size = Vector2(295, -1)
 layout_mode = 2
+theme_override_constants/separation = 5
 alignment = 1
 
 [node name="Stack" type="Button" parent="VBoxContainer/MarginContainer2/HBoxContainer" unique_id=2106553406]

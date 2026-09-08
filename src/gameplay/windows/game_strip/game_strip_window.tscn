@@ -14,12 +14,16 @@
 [ext_resource type="ButtonGroup" uid="uid://ck21gypixlupy" path="res://src/resources/button_groups/game_strip_panel.tres" id="8_1vm5w"]
 [ext_resource type="Texture2D" uid="uid://6d68vkhvjak" path="res://assets/art/_placeholder/buttons/question.tres" id="12_3qx2j"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3qx2j"]
+bg_color = Color(0.2627451, 0.24705882, 0.3764706, 1)
+
 [node name="GameStripPanel" type="PanelContainer" unique_id=296874821 node_paths=PackedStringArray("action_buttons")]
 z_index = 100
-custom_minimum_size = Vector2(340, 92)
+custom_minimum_size = Vector2(340, 100)
 custom_maximum_size = Vector2(356, -1)
 offset_right = 385.0
 offset_bottom = 92.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_3qx2j")
 script = ExtResource("1_opekr")
 action_buttons = [NodePath("MarginContainer/VBoxContainer/HBoxContainer/Battlefield"), NodePath("MarginContainer/VBoxContainer/HBoxContainer/Mining"), NodePath("MarginContainer/VBoxContainer/HBoxContainer/Woodcutting"), NodePath("MarginContainer/VBoxContainer/HBoxContainer/Fishing"), NodePath("MarginContainer/VBoxContainer/HBoxContainer/Open")]
 
@@ -38,7 +42,7 @@ theme_override_constants/separation = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=755337081]
 layout_mode = 2
-theme_override_constants/separation = 1
+theme_override_constants/separation = 5
 
 [node name="Battlefield" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=929366691]
 layout_mode = 2
