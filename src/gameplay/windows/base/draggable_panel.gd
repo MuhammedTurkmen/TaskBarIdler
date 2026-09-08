@@ -21,14 +21,9 @@ const SCREEN_PADDING: float = 10.0
 # Dikey taşma için deadzone (ayarlanabilir)
 var vertical_deadzone: float = 50.0
 
-# Game strip'in default pozisyonu (ortaya dönmek için)
-var default_x_position: float = 0.0
-
 func _ready():
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_setup_panel()
-	# Default pozisyonu kaydet
-	default_x_position = position.x
 
 func _setup_panel():
 	pass
@@ -51,11 +46,12 @@ func _gui_input(event):
 		if is_group_leader:
 			# Game strip panel her zaman ekran sınırları içinde kalır
 			global_position = _clamp_to_screen(new_position, self)
-			_update_attached_panels()
 		else:
 			# Diğer paneller serbestçe hareket edebilir
 			global_position = new_position
-			_update_attached_panels()
+		
+		# Bağlı panelleri güncelle (zincirleme)
+		_update_attached_panels_recursive()
 		
 		accept_event()
 
@@ -68,32 +64,52 @@ func _clamp_to_screen(position: Vector2, panel: Control) -> Vector2:
 	
 	return position
 
+func _update_attached_panels_recursive():
+	# Doğrudan bağlı panelleri güncelle
+	for panel in attached_panels:
+		if attached_offsets.has(panel):
+			panel.position = position + attached_offsets[panel]
+			
+			# Eğer bağlı panel de DraggablePanel ise onun bağlı panellerini de güncelle
+			if panel is DraggablePanel:
+				panel._update_attached_panels_recursive()
+
 func _fix_all_panel_positions():
 	if not is_group_leader:
 		return
 	
 	# Önce game strip'i ekran sınırlarına clamp et
 	global_position = _clamp_to_screen(global_position, self)
-	_update_attached_panels()
+	_update_attached_panels_recursive()
 	
-	# Taşan panelleri kontrol et
-	var has_overflow = _check_panel_overflow()
+	# Taşan panelleri kontrol et (recursive olarak tüm bağlı panelleri kontrol et)
+	var overflow_info = _check_all_panels_overflow()
 	
-	if has_overflow:
+	if overflow_info["has_overflow"]:
 		# Taşma varsa düzelt
-		_fix_overflow()
+		_fix_overflow(overflow_info)
 	else:
 		# Taşma yoksa game strip'i ortaya döndür (sadece x ekseninde)
 		_return_to_center_x()
 	
 	# Son olarak bağlı panelleri güncelle
-	_update_attached_panels()
+	_update_attached_panels_recursive()
 
-func _check_panel_overflow() -> bool:
+func _check_all_panels_overflow() -> Dictionary:
 	var screen_size = DisplayServer.screen_get_size()
-	var has_overflow = false
 	
-	for panel in attached_panels:
+	var result = {
+		"has_overflow": false,
+		"left_overflow": false,
+		"right_overflow": false,
+		"top_overflow": false,
+		"bottom_overflow": false
+	}
+	
+	# Tüm panelleri topla (recursive)
+	var all_panels = _get_all_attached_panels()
+	
+	for panel in all_panels:
 		if not panel.visible:
 			continue
 		
@@ -102,114 +118,127 @@ func _check_panel_overflow() -> bool:
 		
 		# Sol taşma kontrolü
 		if panel_pos.x < SCREEN_PADDING:
-			return true
+			result["left_overflow"] = true
+			result["has_overflow"] = true
 		
 		# Sağ taşma kontrolü
 		if panel_pos.x + panel_size.x > screen_size.x - SCREEN_PADDING:
-			return true
+			result["right_overflow"] = true
+			result["has_overflow"] = true
 		
 		# Üst taşma kontrolü (deadzone ile)
 		if panel_pos.y < vertical_deadzone:
-			return true
+			result["top_overflow"] = true
+			result["has_overflow"] = true
 		
 		# Alt taşma kontrolü (deadzone ile)
 		if panel_pos.y + panel_size.y > screen_size.y - vertical_deadzone:
-			return true
+			result["bottom_overflow"] = true
+			result["has_overflow"] = true
 	
-	return false
+	return result
 
-func _fix_overflow():
+func _get_all_attached_panels() -> Array:
+	var all_panels = []
+	
+	# Doğrudan bağlı panelleri ekle
+	for panel in attached_panels:
+		all_panels.append(panel)
+		
+		# Eğer bağlı panel de DraggablePanel ise onun bağlı panellerini de ekle
+		if panel is DraggablePanel:
+			all_panels.append_array(panel._get_all_attached_panels())
+	
+	return all_panels
+
+func _fix_overflow(overflow_info: Dictionary):
 	var screen_size = DisplayServer.screen_get_size()
 	
-	# Taşan panelleri bul
-	var left_overflow = false
-	var right_overflow = false
-	var top_overflow = false
-	var bottom_overflow = false
-	
-	for panel in attached_panels:
-		if not panel.visible:
-			continue
-		
-		var panel_pos = panel.global_position
-		var panel_size = panel.size
-		
-		if panel_pos.x < SCREEN_PADDING:
-			left_overflow = true
-		if panel_pos.x + panel_size.x > screen_size.x - SCREEN_PADDING:
-			right_overflow = true
-		if panel_pos.y < vertical_deadzone:
-			top_overflow = true
-		if panel_pos.y + panel_size.y > screen_size.y - vertical_deadzone:
-			bottom_overflow = true
-	
 	# Yatay düzeltme
-	if left_overflow:
-		_reposition_panels_left()
-	elif right_overflow:
-		_reposition_panels_right()
+	if overflow_info["left_overflow"]:
+		_fix_left_overflow()
+	elif overflow_info["right_overflow"]:
+		_fix_right_overflow()
 	
 	# Dikey düzeltme
-	if top_overflow:
-		_reposition_panels_below_game_strip()
-	elif bottom_overflow:
-		_reposition_panels_above_game_strip()
+	if overflow_info["top_overflow"]:
+		_fix_top_overflow()
+	elif overflow_info["bottom_overflow"]:
+		_fix_bottom_overflow()
 
-func _reposition_panels_left():
-	var sorted_panels = _get_visible_panels_sorted_by_x()
+func _fix_left_overflow():
+	var all_panels = _get_all_attached_panels()
+	var visible_panels = []
 	
-	if sorted_panels.is_empty():
+	for panel in all_panels:
+		if panel.visible:
+			visible_panels.append(panel)
+	
+	if visible_panels.is_empty():
 		return
+	
+	# Panelleri x pozisyonuna göre sırala
+	visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
 	
 	# En soldaki paneli padding'e yasla
 	var current_x = SCREEN_PADDING
-	for panel in sorted_panels:
+	for panel in visible_panels:
 		panel.global_position.x = current_x
 		current_x += panel.size.x + 5
 	
-	# Game strip'i de sola yasla
+	# Game strip'i en sola yasla
 	global_position.x = SCREEN_PADDING
 	
-	# Offset'leri güncelle
-	_update_offsets_after_reposition()
+	# Offset'leri recursive olarak güncelle
+	_update_offsets_recursive()
 
-func _reposition_panels_right():
+func _fix_right_overflow():
 	var screen_size = DisplayServer.screen_get_size()
-	var sorted_panels = _get_visible_panels_sorted_by_x()
+	var all_panels = _get_all_attached_panels()
+	var visible_panels = []
 	
-	if sorted_panels.is_empty():
+	for panel in all_panels:
+		if panel.visible:
+			visible_panels.append(panel)
+	
+	if visible_panels.is_empty():
 		return
+	
+	# Panelleri x pozisyonuna göre sırala
+	visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
 	
 	# En sağdaki paneli padding'e yasla
 	var current_x = screen_size.x - SCREEN_PADDING
-	for i in range(sorted_panels.size() - 1, -1, -1):
-		var panel = sorted_panels[i]
+	for i in range(visible_panels.size() - 1, -1, -1):
+		var panel = visible_panels[i]
 		panel.global_position.x = current_x - panel.size.x
 		current_x -= panel.size.x + 5
 	
-	# Game strip'i de sağa yasla
+	# Game strip'i en sağa yasla
 	global_position.x = screen_size.x - size.x - SCREEN_PADDING
 	
-	# Offset'leri güncelle
-	_update_offsets_after_reposition()
+	# Offset'leri recursive olarak güncelle
+	_update_offsets_recursive()
 
-func _reposition_panels_below_game_strip():
+func _fix_top_overflow():
 	# Panelleri game strip'in altına taşı
-	for panel in attached_panels:
+	var all_panels = _get_all_attached_panels()
+	for panel in all_panels:
 		if panel.visible:
 			panel.global_position.y = global_position.y + size.y + 5
 	
-	# Offset'leri güncelle
-	_update_offsets_after_reposition()
+	# Offset'leri recursive olarak güncelle
+	_update_offsets_recursive()
 
-func _reposition_panels_above_game_strip():
+func _fix_bottom_overflow():
 	# Panelleri game strip'in üstüne taşı
-	for panel in attached_panels:
+	var all_panels = _get_all_attached_panels()
+	for panel in all_panels:
 		if panel.visible:
 			panel.global_position.y = global_position.y - panel.size.y - 5
 	
-	# Offset'leri güncelle
-	_update_offsets_after_reposition()
+	# Offset'leri recursive olarak güncelle
+	_update_offsets_recursive()
 
 func _return_to_center_x():
 	var screen_size = DisplayServer.screen_get_size()
@@ -218,24 +247,17 @@ func _return_to_center_x():
 	global_position.x = (screen_size.x - size.x) / 2
 	
 	# Bağlı panelleri güncelle
-	_update_attached_panels()
+	_update_attached_panels_recursive()
 
-func _get_visible_panels_sorted_by_x() -> Array:
-	var visible_panels = []
-	
-	for panel in attached_panels:
-		if panel.visible:
-			visible_panels.append(panel)
-	
-	visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
-	
-	return visible_panels
-
-func _update_offsets_after_reposition():
-	# Tüm bağlı panellerin offset'lerini güncelle
+func _update_offsets_recursive():
+	# Doğrudan bağlı panellerin offset'lerini güncelle
 	for panel in attached_panels:
 		if attached_offsets.has(panel):
 			attached_offsets[panel] = panel.global_position - global_position
+			
+			# Eğer bağlı panel de DraggablePanel ise onun offset'lerini de güncelle
+			if panel is DraggablePanel:
+				panel._update_offsets_recursive()
 
 func attach_panel(panel: Control, offset: Vector2 = Vector2.ZERO):
 	if panel not in attached_panels:
@@ -245,9 +267,8 @@ func attach_panel(panel: Control, offset: Vector2 = Vector2.ZERO):
 		panel.position = position + offset
 
 func _update_attached_panels():
-	for panel in attached_panels:
-		if attached_offsets.has(panel):
-			panel.position = position + attached_offsets[panel]
+	# Eski metod - geriye dönük uyumluluk için
+	_update_attached_panels_recursive()
 
 func open():
 	visible = true
