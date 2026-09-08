@@ -8,7 +8,7 @@ var map_scenes: Dictionary = {
 	GameManager.Location.BATTLEFIELD: preload("res://src/levels/world/maps/battlefield_map.tscn")
 }
 
-@export var sub_viewport_path: NodePath = "/root/MainGame/UILayer/GameStripPanel/VBoxContainer/SubViewportContainer/SubViewport"
+@export var sub_viewport_path: NodePath = "/root/MainGame/UILayer/GameStripPanel/MarginContainer/VBoxContainer/SubViewportContainer/SubViewport"
 
 @onready var sub_viewport: SubViewport
 

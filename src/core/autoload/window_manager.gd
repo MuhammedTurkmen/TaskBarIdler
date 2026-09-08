@@ -1,4 +1,3 @@
-# window_manager.gd
 extends Node
 
 var panels: Dictionary = {}
@@ -12,6 +11,11 @@ var panel_scenes: Dictionary = {
 # Paneller arası boşluk
 const INVENTORY_GAP: int = 15
 const SIDE_PANEL_GAP: int = 25
+
+# Scale ayarları
+var scale_levels: Array = [1.0, 1.1, 1.2, 1.35]
+var current_scale_index: int = 0
+var current_scale: float = 1.0
 
 # Pozisyon modları
 enum PositionMode {
@@ -28,6 +32,29 @@ func _process(_delta: float) -> void:
 	# Escape tuşu ile drag'ı iptal et
 	if Input.is_action_just_pressed("ui_cancel") and DragManager.is_dragging:
 		DragManager.cancel_drag()
+	
+	# Scale kısayolları
+	if Input.is_action_just_pressed("scale_up"):
+		_change_scale(1)
+	elif Input.is_action_just_pressed("scale_down"):
+		_change_scale(-1)
+
+func _change_scale(direction: int):
+	var new_index = current_scale_index + direction
+	
+	if new_index >= 0 and new_index < scale_levels.size():
+		current_scale_index = new_index
+		current_scale = scale_levels[current_scale_index]
+		_apply_scale_to_all_panels()
+		print("UI Scale: ", current_scale)
+
+func _apply_scale_to_all_panels():
+	for panel in panels.values():
+		if panel is Control:
+			panel.scale = Vector2(current_scale, current_scale)
+			panel.pivot_offset = Vector2.ZERO
+	
+	_update_all_positions()
 
 func _create_all_panels():
 	_create_panel("game_strip")
@@ -43,6 +70,7 @@ func _create_all_panels():
 	
 	_setup_panel_attachments()
 	_set_position_mode(PositionMode.CENTER)
+	_apply_scale_to_all_panels()
 
 func _create_panel(id: String):
 	var panel_instance = panel_scenes[id].instantiate()
@@ -96,29 +124,35 @@ func _update_all_positions():
 	var stack = panels["stack"]
 	var map_panel = panels["map_panel"]
 	
+	# Scale edilmiş boyutları hesapla
+	var scaled_game_strip_size = game_strip.size * current_scale
+	var scaled_hero_size = hero.size * current_scale
+	var scaled_stack_size = stack.size * current_scale
+	var scaled_map_size = map_panel.size * current_scale
+	
 	match current_position_mode:
 		PositionMode.CENTER:
 			# GameStrip - altta ortada
 			game_strip.position = Vector2(
-				(screen_size.x - game_strip.size.x) / 2,
-				screen_size.y - game_strip.size.y - SIDE_PANEL_GAP
+				(screen_size.x - scaled_game_strip_size.x) / 2,
+				screen_size.y - scaled_game_strip_size.y - SIDE_PANEL_GAP
 			)
 			
 			# Hero - game_strip'in üstünde ortada
 			hero.position = Vector2(
-				game_strip.position.x + (game_strip.size.x - hero.size.x) / 2,
-				game_strip.position.y - hero.size.y - INVENTORY_GAP
+				game_strip.position.x + (scaled_game_strip_size.x - scaled_hero_size.x) / 2,
+				game_strip.position.y - scaled_hero_size.y - INVENTORY_GAP
 			)
 			
 			# Stack - hero'nun solunda
 			stack.position = Vector2(
-				hero.position.x - stack.size.x - SIDE_PANEL_GAP,
+				hero.position.x - scaled_stack_size.x - SIDE_PANEL_GAP,
 				hero.position.y
 			)
 			
 			# Map - hero'nun sağında
 			map_panel.position = Vector2(
-				hero.position.x + hero.size.x + SIDE_PANEL_GAP,
+				hero.position.x + scaled_map_size.x + SIDE_PANEL_GAP,
 				hero.position.y
 			)
 		
@@ -126,21 +160,20 @@ func _update_all_positions():
 			# GameStrip - sol altta
 			game_strip.position = Vector2(
 				SIDE_PANEL_GAP,
-				screen_size.y - game_strip.size.y - SIDE_PANEL_GAP
+				screen_size.y - scaled_game_strip_size.y - SIDE_PANEL_GAP
 			)
 			
 			# Hero - sol üstte
 			hero.position = Vector2(
 				SIDE_PANEL_GAP,
-				game_strip.position.y - hero.size.y - INVENTORY_GAP
+				game_strip.position.y - scaled_hero_size.y - INVENTORY_GAP
 			)
 			
-			# Stack - hero'nun solunda (ekran dışına taşabilir, kontrol et)
-			var stack_x = hero.position.x - stack.size.x - SIDE_PANEL_GAP
+			# Stack - hero'nun solunda
+			var stack_x = hero.position.x - scaled_stack_size.x - SIDE_PANEL_GAP
 			if stack_x < SIDE_PANEL_GAP:
-				# Sola sığmıyorsa sağa koy
 				stack.position = Vector2(
-					hero.position.x + hero.size.x + SIDE_PANEL_GAP,
+					hero.position.x + scaled_hero_size.x + SIDE_PANEL_GAP,
 					hero.position.y
 				)
 			else:
@@ -148,7 +181,7 @@ func _update_all_positions():
 			
 			# Map - hero'nun sağında
 			map_panel.position = Vector2(
-				hero.position.x + hero.size.x + SIDE_PANEL_GAP,
+				hero.position.x + scaled_hero_size.x + SIDE_PANEL_GAP,
 				hero.position.y
 			)
 	

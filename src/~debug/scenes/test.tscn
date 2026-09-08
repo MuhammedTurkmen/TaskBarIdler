@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bl1nx463jeefm"]
+
+[ext_resource type="StyleBox" uid="uid://6w46cerhghai" path="res://src/resources/styles/main_theme/box_flat/rectangular/borders/border_1px.tres" id="1_ifwnb"]
+[ext_resource type="Material" uid="uid://c4uj47qis8qrk" path="res://src/shaders/slot.tres" id="1_lbefo"]
+
+[node name="Test" type="Node2D" unique_id=439039546]
+
+[node name="Panel" type="Panel" parent="." unique_id=711153856]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = ExtResource("1_ifwnb")
+
+[node name="Panel2" type="Panel" parent="." unique_id=358754331]
+material = ExtResource("1_lbefo")
+offset_left = 45.0
+offset_right = 85.0
+offset_bottom = 40.0
+theme_override_styles/panel = ExtResource("1_ifwnb")

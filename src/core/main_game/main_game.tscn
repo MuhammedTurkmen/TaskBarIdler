@@ -1,20 +1,20 @@
 [gd_scene format=3 uid="uid://c2oqyl5ngvvg7"]
 
-[ext_resource type="Script" uid="uid://r0ai5qydmynj" path="res://src/levels/main_game.gd" id="1_r7wiy"]
-[ext_resource type="Script" uid="uid://d1t2j2vpa2i35" path="res://src/levels/world/world_manager.gd" id="3_2cx2j"]
-[ext_resource type="Script" uid="uid://b2m6d5vx3khhd" path="res://src/~debug/scripts/test_item_spawner.gd" id="3_fdlw4"]
+[ext_resource type="Script" uid="uid://r0ai5qydmynj" path="res://src/core/main_game/main_game.gd" id="1_wurlc"]
+[ext_resource type="Script" uid="uid://d1t2j2vpa2i35" path="res://src/levels/world/world_manager.gd" id="2_r8xcf"]
+[ext_resource type="Script" uid="uid://b2m6d5vx3khhd" path="res://src/~debug/scripts/test_item_spawner.gd" id="3_txi7b"]
 
 [node name="MainGame" type="Node" unique_id=479227311]
 process_mode = 3
-script = ExtResource("1_r7wiy")
+script = ExtResource("1_wurlc")
 
 [node name="Systems" type="Node" parent="." unique_id=939630328]
 
 [node name="WorldManager" type="Node" parent="Systems" unique_id=1541601700]
-script = ExtResource("3_2cx2j")
+script = ExtResource("2_r8xcf")
 
 [node name="ItemSpawner" type="Node" parent="Systems" unique_id=1529491793]
-script = ExtResource("3_fdlw4")
+script = ExtResource("3_txi7b")
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1543257682]
 

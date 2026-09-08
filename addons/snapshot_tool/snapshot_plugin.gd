@@ -8,10 +8,13 @@ var target_node: CanvasItem
 func _enter_tree():
 	# Üst bara buton ekle
 	snapshot_button = Button.new()
-	snapshot_button.text = "📸 Snapshot"
+	snapshot_button.text = "📸"
 	snapshot_button.tooltip_text = "Seçili CanvasItem'i PNG olarak kaydet"
 	snapshot_button.flat = true
 	snapshot_button.pressed.connect(_on_snapshot_pressed)
+	
+	# Hover efekti için stil ekle
+	_apply_hover_style()
 	
 	# Butonu editör üst barına ekle
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, snapshot_button)
@@ -27,6 +30,51 @@ func _enter_tree():
 	
 	# FileDialog'u editöre ekle
 	add_child(file_dialog)
+
+func _apply_hover_style():
+	snapshot_button.flat = false
+	
+	# Normal stil - hafif koyu arkaplan
+	var normal_style = StyleBoxFlat.new()
+	normal_style.bg_color = Color("#101113")
+	normal_style.corner_radius_top_left = 3
+	normal_style.corner_radius_top_right = 3
+	normal_style.corner_radius_bottom_left = 3
+	normal_style.corner_radius_bottom_right = 3
+	# normal_style.content_margin_left = 6
+	# normal_style.content_margin_right = 6
+	# normal_style.content_margin_top = 4
+	# normal_style.content_margin_bottom = 4
+	
+	# Hover stili - daha açık arkaplan
+	var hover_style = StyleBoxFlat.new()
+	hover_style.bg_color = Color("#27282a")
+	hover_style.corner_radius_top_left = 3
+	hover_style.corner_radius_top_right = 3
+	hover_style.corner_radius_bottom_left = 3
+	hover_style.corner_radius_bottom_right = 3
+	# hover_style.content_margin_left = 6
+	# hover_style.content_margin_right = 6
+	# hover_style.content_margin_top = 4
+	# hover_style.content_margin_bottom = 4
+	
+	# Pressed stili - en açık arkaplan
+	var pressed_style = StyleBoxFlat.new()
+	pressed_style.bg_color = Color(0.5, 0.5, 0.5, 1.0)
+	pressed_style.corner_radius_top_left = 3
+	pressed_style.corner_radius_top_right = 3
+	pressed_style.corner_radius_bottom_left = 3
+	pressed_style.corner_radius_bottom_right = 3
+	# pressed_style.content_margin_left = 6
+	# pressed_style.content_margin_right = 6
+	# pressed_style.content_margin_top = 4
+	# pressed_style.content_margin_bottom = 4
+	
+	# Stilleri uygula
+	snapshot_button.add_theme_stylebox_override("normal", normal_style)
+	snapshot_button.add_theme_stylebox_override("hover", hover_style)
+	snapshot_button.add_theme_stylebox_override("pressed", pressed_style)
+	snapshot_button.add_theme_stylebox_override("focus", hover_style)
 
 func _exit_tree():
 	# Temizlik
