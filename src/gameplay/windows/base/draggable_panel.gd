@@ -78,22 +78,104 @@ func _fix_all_panel_positions():
 	if not is_group_leader:
 		return
 	
-	# Önce game strip'i ekran sınırlarına clamp et
+	# Game strip'i ekran sınırlarına clamp et (zaten sürükleme sırasında clamp'liydi)
 	global_position = _clamp_to_screen(global_position, self)
-	_update_attached_panels_recursive()
 	
-	# Taşan panelleri kontrol et (recursive olarak tüm bağlı panelleri kontrol et)
+	# Game strip'in ekrandaki konumunu belirle
+	var screen_size = DisplayServer.screen_get_size()
+	var game_strip_left = global_position.x
+	var game_strip_right = global_position.x + size.x
+	var game_strip_center = global_position.x + size.x / 2
+	
+	# Sol kenara yakın mı?
+	var near_left_edge = game_strip_left < screen_size.x * 0.3
+	
+	# Sağ kenara yakın mı?
+	var near_right_edge = game_strip_right > screen_size.x * 0.7
+	
+	# Diğer panelleri game strip'in kenarına göre hizala
+	if near_left_edge:
+		_align_panels_to_game_strip_left()
+	elif near_right_edge:
+		_align_panels_to_game_strip_right()
+	else:
+		_align_panels_to_game_strip_center_x()
+	
+	# Taşma kontrolü yap
 	var overflow_info = _check_all_panels_overflow()
 	
 	if overflow_info["has_overflow"]:
-		# Taşma varsa düzelt
-		_fix_overflow(overflow_info)
-	else:
-		# Taşma yoksa game strip'i ortaya döndür (sadece x ekseninde)
-		_return_to_center_x()
+		# Taşma varsa düzelt (sadece diğer panelleri, game strip sabit)
+		_fix_overflow_without_moving_game_strip(overflow_info)
 	
 	# Son olarak bağlı panelleri güncelle
 	_update_attached_panels_recursive()
+
+func _align_panels_to_game_strip_left():
+	# Game strip'in sol kenarına göre panelleri hizala
+	var all_panels = _get_all_attached_panels()
+	var visible_panels = []
+	
+	for panel in all_panels:
+		if panel.visible:
+			visible_panels.append(panel)
+	
+	if visible_panels.is_empty():
+		return
+	
+	# Panelleri x pozisyonuna göre sırala
+	visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+	
+	# Game strip'in sol kenarından başlayarak panelleri yerleştir
+	var current_x = global_position.x
+	for panel in visible_panels:
+		panel.global_position.x = current_x
+		current_x += panel.size.x + 5
+	
+	# Offset'leri güncelle
+	_update_offsets_recursive()
+
+func _align_panels_to_game_strip_right():
+	# Game strip'in sağ kenarına göre panelleri hizala
+	var all_panels = _get_all_attached_panels()
+	var visible_panels = []
+	
+	for panel in all_panels:
+		if panel.visible:
+			visible_panels.append(panel)
+	
+	if visible_panels.is_empty():
+		return
+	
+	# Panelleri x pozisyonuna göre sırala
+	visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+	
+	# Game strip'in sağ kenarına doğru panelleri yerleştir
+	var current_x = global_position.x + size.x
+	for i in range(visible_panels.size() - 1, -1, -1):
+		var panel = visible_panels[i]
+		panel.global_position.x = current_x - panel.size.x
+		current_x -= panel.size.x + 5
+	
+	# Offset'leri güncelle
+	_update_offsets_recursive()
+
+func _align_panels_to_game_strip_center_x():
+	# Game strip'in ortasına göre panelleri hizala
+	var game_strip_center = global_position.x + size.x / 2
+	
+	# Hero paneli game strip'in ortasına hizala
+	for panel in attached_panels:
+		if panel.visible and attached_offsets.has(panel):
+			panel.global_position.x = game_strip_center - panel.size.x / 2
+	
+	# Diğer panelleri recursive olarak güncelle
+	for panel in attached_panels:
+		if panel is DraggablePanel:
+			panel._update_attached_panels_recursive()
+	
+	# Offset'leri güncelle
+	_update_offsets_recursive()
 
 func _check_all_panels_overflow() -> Dictionary:
 	var screen_size = DisplayServer.screen_get_size()
@@ -151,103 +233,47 @@ func _get_all_attached_panels() -> Array:
 	
 	return all_panels
 
-func _fix_overflow(overflow_info: Dictionary):
+func _fix_overflow_without_moving_game_strip(overflow_info: Dictionary):
 	var screen_size = DisplayServer.screen_get_size()
+	var all_panels = _get_all_attached_panels()
+	var visible_panels = []
+	
+	for panel in all_panels:
+		if panel.visible:
+			visible_panels.append(panel)
+	
+	if visible_panels.is_empty():
+		return
 	
 	# Yatay düzeltme
 	if overflow_info["left_overflow"]:
-		_fix_left_overflow()
+		# Panelleri ekranın soluna yasla
+		visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+		var current_x = SCREEN_PADDING
+		for panel in visible_panels:
+			panel.global_position.x = current_x
+			current_x += panel.size.x + 5
+	
 	elif overflow_info["right_overflow"]:
-		_fix_right_overflow()
+		# Panelleri ekranın sağına yasla
+		visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+		var current_x = screen_size.x - SCREEN_PADDING
+		for i in range(visible_panels.size() - 1, -1, -1):
+			var panel = visible_panels[i]
+			panel.global_position.x = current_x - panel.size.x
+			current_x -= panel.size.x + 5
 	
 	# Dikey düzeltme
 	if overflow_info["top_overflow"]:
-		_fix_top_overflow()
-	elif overflow_info["bottom_overflow"]:
-		_fix_bottom_overflow()
-
-func _fix_left_overflow():
-	var all_panels = _get_all_attached_panels()
-	var visible_panels = []
-	
-	for panel in all_panels:
-		if panel.visible:
-			visible_panels.append(panel)
-	
-	if visible_panels.is_empty():
-		return
-	
-	# Panelleri x pozisyonuna göre sırala
-	visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
-	
-	# En soldaki paneli padding'e yasla
-	var current_x = SCREEN_PADDING
-	for panel in visible_panels:
-		panel.global_position.x = current_x
-		current_x += panel.size.x + 5
-	
-	# Game strip'i en sola yasla
-	global_position.x = SCREEN_PADDING
-	
-	# Offset'leri recursive olarak güncelle
-	_update_offsets_recursive()
-
-func _fix_right_overflow():
-	var screen_size = DisplayServer.screen_get_size()
-	var all_panels = _get_all_attached_panels()
-	var visible_panels = []
-	
-	for panel in all_panels:
-		if panel.visible:
-			visible_panels.append(panel)
-	
-	if visible_panels.is_empty():
-		return
-	
-	# Panelleri x pozisyonuna göre sırala
-	visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
-	
-	# En sağdaki paneli padding'e yasla
-	var current_x = screen_size.x - SCREEN_PADDING
-	for i in range(visible_panels.size() - 1, -1, -1):
-		var panel = visible_panels[i]
-		panel.global_position.x = current_x - panel.size.x
-		current_x -= panel.size.x + 5
-	
-	# Game strip'i en sağa yasla
-	global_position.x = screen_size.x - size.x - SCREEN_PADDING
-	
-	# Offset'leri recursive olarak güncelle
-	_update_offsets_recursive()
-
-func _fix_top_overflow():
-	# Panelleri game strip'in altına taşı
-	var all_panels = _get_all_attached_panels()
-	for panel in all_panels:
-		if panel.visible:
+		for panel in visible_panels:
 			panel.global_position.y = global_position.y + size.y + 5
 	
-	# Offset'leri recursive olarak güncelle
-	_update_offsets_recursive()
-
-func _fix_bottom_overflow():
-	# Panelleri game strip'in üstüne taşı
-	var all_panels = _get_all_attached_panels()
-	for panel in all_panels:
-		if panel.visible:
+	elif overflow_info["bottom_overflow"]:
+		for panel in visible_panels:
 			panel.global_position.y = global_position.y - panel.size.y - 5
 	
-	# Offset'leri recursive olarak güncelle
+	# Offset'leri güncelle
 	_update_offsets_recursive()
-
-func _return_to_center_x():
-	var screen_size = DisplayServer.screen_get_size()
-	
-	# Game strip'i x ekseninde ortaya döndür
-	global_position.x = (screen_size.x - size.x) / 2
-	
-	# Bağlı panelleri güncelle
-	_update_attached_panels_recursive()
 
 func _update_offsets_recursive():
 	# Doğrudan bağlı panellerin offset'lerini güncelle
