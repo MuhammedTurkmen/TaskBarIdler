@@ -44,18 +44,44 @@ func _gui_input(event):
 				accept_event()
 			else:
 				is_dragging = false
-				if is_group_leader:
-					_fix_all_panel_positions()
+				# Sürükleme bittiğinde grup lideri pozisyon düzeltmesi yapsın
+				var leader = _find_group_leader()
+				if leader:
+					leader._fix_all_panel_positions()
 	elif event is InputEventMouseMotion and is_dragging:
 		var new_position = get_global_mouse_position() - drag_offset
+		var delta = new_position - global_position
 		
 		if is_group_leader:
+			# Game strip ise kendini clamp'le ve grubu güncelle
 			global_position = _clamp_to_screen(new_position, self)
+			_update_panels_optimized()
 		else:
-			global_position = new_position
+			# Grup liderini bul ve onu delta kadar hareket ettir
+			var leader = _find_group_leader()
+			if leader:
+				var leader_new_pos = leader.global_position + delta
+				leader.global_position = leader._clamp_to_screen(leader_new_pos, leader)
+				leader._update_panels_optimized()
+			else:
+				# Grup lideri yoksa kendini hareket ettir
+				global_position = new_position
+				_update_panels_optimized()
 		
-		_update_panels_optimized()
 		accept_event()
+
+# Grup liderini bul (parent zincirini takip et)
+func _find_group_leader() -> DraggablePanel:
+	if is_group_leader:
+		return self
+	
+	var current = parent_panel
+	while current:
+		if current is DraggablePanel and current.is_group_leader:
+			return current
+		current = current.parent_panel
+	
+	return null
 
 func _update_panels_optimized():
 	if _cache_dirty:
@@ -92,7 +118,6 @@ func _fix_all_panel_positions():
 	var game_strip_left = global_position.x
 	var game_strip_right = global_position.x + size.x
 	
-	# Kenar eşiğini kullan
 	var edge_distance = screen_size.x * EDGE_THRESHOLD
 	var near_left_edge = game_strip_left < edge_distance
 	var near_right_edge = game_strip_right > screen_size.x - edge_distance
