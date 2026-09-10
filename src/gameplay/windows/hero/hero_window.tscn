@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cb6af8u504j1q" path="res://src/gameplay/windows/hero/hero_window.gd" id="1_4gbab"]
 [ext_resource type="StyleBox" uid="uid://1ly2dto7uix8" path="res://src/resources/styles/main_theme/box_flat/rectangular/borders/border_filled_2px.tres" id="2_dfkeh"]
-[ext_resource type="Texture2D" uid="uid://cn5w27e7seeo8" path="res://assets/art/ui/window/new_banner.png" id="3_4gbab"]
+[ext_resource type="Texture2D" uid="uid://c7i334ap0hvyb" path="res://assets/art/ui/window/label_background_flat.png" id="3_ix5uu"]
+[ext_resource type="Texture2D" uid="uid://do7ypxcbnx2g6" path="res://assets/art/ui/window/label_banner.png" id="4_urfyj"]
 [ext_resource type="LabelSettings" uid="uid://dnpougdg66s7s" path="res://src/resources/styles/main_theme/label_styles/title/panel.tres" id="4_xdl55"]
 [ext_resource type="PackedScene" uid="uid://cytuhwbt0tg67" path="res://src/ui/hud/h_separator_2px.tscn" id="5_dfkeh"]
 [ext_resource type="PackedScene" uid="uid://c56fsfcgjkwjs" path="res://src/ui/hud/bordered_slot.tscn" id="6_h1ca2"]
@@ -51,9 +52,24 @@ texture_filter = 1
 custom_minimum_size = Vector2(306, 30)
 custom_maximum_size = Vector2(306, 30)
 layout_mode = 2
-texture = ExtResource("3_4gbab")
+texture = ExtResource("3_ix5uu")
 expand_mode = 3
 metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Banner" unique_id=1715915954]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -15.0
+offset_right = 90.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_urfyj")
 
 [node name="TitleLabel" type="Label" parent="VBoxContainer/Banner" unique_id=490645207]
 layout_mode = 1
@@ -294,111 +310,6 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="UI Slot7" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=772744588 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot8" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=290864501 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot9" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1243001742 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot10" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=878335807 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot11" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1696998560 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot12" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=103622789 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot13" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=163636080 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot14" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1666372615 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot15" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=803845339 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot16" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1308877276 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot17" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=945996488 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot18" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2020930747 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot19" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=783223451 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot20" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=718004350 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot21" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=579926066 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot22" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2046221942 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot23" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2004783516 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot24" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=109433888 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot25" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=215949952 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot26" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=428112786 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot27" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=562573134 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot28" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1108320587 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot29" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2119832645 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot30" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1954886699 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot31" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1754265087 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot32" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=883914225 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot33" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1930154217 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot34" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=941170434 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot35" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2093670989 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot36" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=378290777 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot37" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=308451310 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot38" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1369870777 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot39" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1332106858 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot40" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=185626349 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot41" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=770317920 instance=ExtResource("15_4gbab")]
-layout_mode = 2
-
-[node name="UI Slot42" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=56103394 instance=ExtResource("15_4gbab")]
 layout_mode = 2
 
 [node name="HSeparator2" parent="VBoxContainer" unique_id=1316624779 instance=ExtResource("5_dfkeh")]
