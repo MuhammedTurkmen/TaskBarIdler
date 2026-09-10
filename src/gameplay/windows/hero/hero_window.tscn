@@ -131,27 +131,31 @@ last_wrap_alignment = 2
 
 [node name="Headset" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=1350450400 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
-allowed_equipment_types = 1
+allowed_equipment_type = 1
 
 [node name="Chestplate" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=916097044 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
-allowed_equipment_types = 2
+allowed_equipment_type = 2
 
 [node name="Leggins" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=1909765361 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
-allowed_equipment_types = 4
+allowed_equipment_type = 3
 
 [node name="WeaponLeft" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=1417877315 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 6
 
 [node name="Hand" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=668676658 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 5
 
 [node name="WeaponRight" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=2127954131 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 6
 
 [node name="Foot" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/HFlowContainer" unique_id=1273808282 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 4
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character" unique_id=1986511553]
 custom_maximum_size = Vector2(74.455, -1)
@@ -255,21 +259,27 @@ columns = 2
 
 [node name="Gem" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=1051345892 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 9
 
 [node name="Crown" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=104832057 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 10
 
 [node name="Cloak" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=746801914 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 8
 
 [node name="Necklace" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=1621871795 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 12
 
 [node name="Quiver" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=946640254 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 11
 
 [node name="Ring" parent="VBoxContainer/MarginContainer/Items/Character/MarginContainer/Character/Accessories" unique_id=271042293 instance=ExtResource("6_h1ca2")]
 layout_mode = 2
+allowed_equipment_type = 7
 
 [node name="InventorySlots" type="PanelContainer" parent="VBoxContainer/MarginContainer/Items" unique_id=1414490036]
 texture_filter = 1
@@ -310,6 +320,48 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="UI Slot7" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=772744588 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot8" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=771227204 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot9" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1998385572 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot10" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1140944444 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot11" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1366417329 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot12" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1692234536 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot13" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=251803881 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot14" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2081808081 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot15" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=50799869 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot16" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1123899376 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot17" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=690298570 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot18" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1018914055 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot19" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=1881138495 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot20" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2126556594 instance=ExtResource("15_4gbab")]
+layout_mode = 2
+
+[node name="UI Slot21" parent="VBoxContainer/MarginContainer/Items/InventorySlots/MarginContainer/Inventory" unique_id=2147206052 instance=ExtResource("15_4gbab")]
 layout_mode = 2
 
 [node name="HSeparator2" parent="VBoxContainer" unique_id=1316624779 instance=ExtResource("5_dfkeh")]

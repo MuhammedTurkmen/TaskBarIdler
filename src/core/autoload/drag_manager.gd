@@ -1,14 +1,15 @@
 # drag_manager.gd
-
 extends Node
 
 signal drag_started(item_data: ItemData, quantity: int)
 signal drag_ended()
+signal drag_cancelled()
 
 var is_dragging: bool = false
 var dragged_item: ItemData = null
 var dragged_quantity: int = 1
 var origin_slot: Control = null
+var origin_slot_data: SlotData = null  # Orijinal veriyi sakla
 
 var drag_layer: CanvasLayer = null
 var preview_container: Control = null
@@ -32,18 +33,15 @@ func _create_preview():
 	if not drag_layer:
 		return
 	
-	# Preview container - SADECE ikon boyutunda, tüm ekranı kaplamaz
 	preview_container = Control.new()
 	preview_container.name = "DragPreview"
 	preview_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	preview_container.visible = false
 	preview_container.z_index = 1000
-	# Tam ekran yapma, sadece içerik boyutunda olsun
 	preview_container.custom_minimum_size = Vector2(40, 40)
 	preview_container.size = Vector2(40, 40)
 	drag_layer.add_child(preview_container)
 	
-	# Panel - sadece ikon etrafında küçük bir panel
 	var panel = PanelContainer.new()
 	panel.name = "Panel"
 	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -63,7 +61,6 @@ func _create_preview():
 	
 	preview_container.add_child(panel)
 	
-	# Icon - sadece ikon boyutunda
 	preview_icon = TextureRect.new()
 	preview_icon.name = "Icon"
 	preview_icon.custom_minimum_size = Vector2(32, 32)
@@ -73,7 +70,6 @@ func _create_preview():
 	preview_icon.set_anchors_preset(Control.PRESET_FULL_RECT)
 	preview_container.add_child(preview_icon)
 	
-	# Quantity Label - sadece ikonun köşesinde
 	preview_label = Label.new()
 	preview_label.name = "Quantity"
 	preview_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -101,6 +97,10 @@ func start_drag(slot: Control, item: ItemData, quantity: int = 1):
 	dragged_item = item
 	dragged_quantity = quantity
 	
+	# Orijinal slot_data'yı sakla
+	if slot is SlotUI or slot is EquipmentSlotUI:
+		origin_slot_data = slot.slot_data
+	
 	_update_preview(item, quantity)
 	
 	preview_container.visible = true
@@ -121,6 +121,7 @@ func _update_preview(item: ItemData, quantity: int):
 			preview_label.visible = false
 
 func end_drag():
+	# Idempotent - birden fazla çağrılsa bile sorun çıkarmasın
 	if not is_dragging:
 		return
 	
@@ -128,8 +129,22 @@ func end_drag():
 	dragged_item = null
 	dragged_quantity = 1
 	origin_slot = null
+	origin_slot_data = null
 	
 	if preview_container:
 		preview_container.visible = false
 	
 	drag_ended.emit()
+
+# Drag iptal edildiğinde (drop reddedildiğinde) çağrılır
+func cancel_drag():
+	if not is_dragging:
+		return
+	
+	# Eşyayı orijinal slota geri koy
+	if origin_slot and origin_slot_data:
+		if origin_slot.has_method("update_slot"):
+			origin_slot.update_slot(origin_slot_data)
+	
+	end_drag()
+	drag_cancelled.emit()
