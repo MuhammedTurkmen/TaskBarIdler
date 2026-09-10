@@ -27,6 +27,7 @@ Utils="*uid://bl4wbfh6gvuev"
 WindowManager="*uid://dwddo2i7rlpc3"
 EventBus="*uid://cwje4eobipesm"
 DragManager="*uid://cmt5edjgt0gg"
+PlayerStats="*uid://rjig3gkjkdcc"
 
 [debug]
 

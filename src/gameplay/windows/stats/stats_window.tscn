@@ -1,0 +1,176 @@
+[gd_scene format=3 uid="uid://15eqqc2klwao"]
+
+[ext_resource type="StyleBox" uid="uid://1ly2dto7uix8" path="res://src/resources/styles/main_theme/box_flat/rectangular/borders/border_filled_2px.tres" id="1_syts3"]
+[ext_resource type="Script" uid="uid://cb6af8u504j1q" path="res://src/gameplay/windows/hero/hero_window.gd" id="2_naykb"]
+[ext_resource type="Texture2D" uid="uid://c7i334ap0hvyb" path="res://assets/art/ui/window/label_background_flat.png" id="3_a8rfp"]
+[ext_resource type="Texture2D" uid="uid://do7ypxcbnx2g6" path="res://assets/art/ui/window/label_banner.png" id="4_x4u5m"]
+[ext_resource type="LabelSettings" uid="uid://dnpougdg66s7s" path="res://src/resources/styles/main_theme/label_styles/title/panel.tres" id="5_dmhyq"]
+[ext_resource type="PackedScene" uid="uid://cytuhwbt0tg67" path="res://src/ui/hud/h_separator_2px.tscn" id="6_oopty"]
+[ext_resource type="LabelSettings" uid="uid://c0fbskpky8dxb" path="res://src/resources/styles/main_theme/label_styles/title/stats.tres" id="7_stfsc"]
+[ext_resource type="StyleBox" uid="uid://beidbllctii1" path="res://src/resources/styles/main_theme/box_flat/rectangular/borders/open_top_border_2px.tres" id="16_tsqq8"]
+
+[node name="HeroPanel" type="PanelContainer" unique_id=1923592201 node_paths=PackedStringArray("action_buttons")]
+z_index = 90
+custom_minimum_size = Vector2(310, 429)
+custom_maximum_size = Vector2(310, -1)
+offset_right = 310.0
+offset_bottom = 429.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("1_syts3")
+script = ExtResource("2_naykb")
+action_buttons = [NodePath(""), NodePath(""), NodePath(""), NodePath("")]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=658463068]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Banner" type="TextureRect" parent="VBoxContainer" unique_id=2115371260]
+texture_filter = 1
+custom_minimum_size = Vector2(306, 30)
+custom_maximum_size = Vector2(306, 30)
+layout_mode = 2
+texture = ExtResource("3_a8rfp")
+expand_mode = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Banner" unique_id=1715915954]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -15.0
+offset_right = 90.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_x4u5m")
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/Banner" unique_id=490645207]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -11.5
+offset_right = 192.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "İSTATİSTİKLER"
+label_settings = ExtResource("5_dmhyq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" parent="VBoxContainer" unique_id=563756529 instance=ExtResource("6_oopty")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1210083006]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="Items" type="VBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=312261640]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Stats" type="PanelContainer" parent="VBoxContainer/MarginContainer/Items" unique_id=1528801094]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("1_syts3")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/Items/Stats" unique_id=1685150261]
+custom_minimum_size = Vector2(0, 350)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer" unique_id=681291640]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer" unique_id=358838659]
+layout_mode = 2
+
+[node name="Level" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1977965622]
+layout_mode = 2
+text = "Level"
+label_settings = ExtResource("7_stfsc")
+
+[node name="Experience" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=764856695]
+layout_mode = 2
+text = "Exp"
+label_settings = ExtResource("7_stfsc")
+
+[node name="BasicAttackDPS" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1172749527]
+layout_mode = 2
+text = "Basic Attack DPS"
+label_settings = ExtResource("7_stfsc")
+
+[node name="AttackDamage" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1833092133]
+layout_mode = 2
+text = "Attack Damage"
+label_settings = ExtResource("7_stfsc")
+
+[node name="CurrentHp" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=453662143]
+layout_mode = 2
+text = "Current HP"
+label_settings = ExtResource("7_stfsc")
+
+[node name="AttackSpeed" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1589239436]
+layout_mode = 2
+text = "Attack Speed"
+label_settings = ExtResource("7_stfsc")
+
+[node name="CriticalChance" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1283981223]
+layout_mode = 2
+text = "Critical Chance"
+label_settings = ExtResource("7_stfsc")
+
+[node name="CriticalDamage" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1376831236]
+layout_mode = 2
+text = "Critical Damage"
+label_settings = ExtResource("7_stfsc")
+
+[node name="CooldownReduction" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=634707036]
+layout_mode = 2
+text = "Cooldown Reduction"
+label_settings = ExtResource("7_stfsc")
+
+[node name="MoveSpeed" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=484794961]
+layout_mode = 2
+text = "Move Speed"
+label_settings = ExtResource("7_stfsc")
+
+[node name="Armor" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=2045449748]
+layout_mode = 2
+text = "Armor"
+label_settings = ExtResource("7_stfsc")
+
+[node name="CastSpeed" type="Label" parent="VBoxContainer/MarginContainer/Items/Stats/MarginContainer/HBoxContainer/VBoxContainer" unique_id=983066102]
+layout_mode = 2
+text = "Cast Speed"
+label_settings = ExtResource("7_stfsc")
+
+[node name="Spellbook" type="PanelContainer" parent="VBoxContainer/MarginContainer/Items" unique_id=1414490036]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("16_tsqq8")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/Items/Spellbook" unique_id=855230343]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
