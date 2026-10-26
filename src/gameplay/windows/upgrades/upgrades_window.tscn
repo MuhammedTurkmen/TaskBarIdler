@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://cvnxi47ry8ocy"]
+
+[ext_resource type="StyleBox" uid="uid://1ly2dto7uix8" path="res://src/resources/styles/main_theme/box_flat/rectangular/borders/border_filled_2px.tres" id="1_gmmx6"]
+[ext_resource type="Texture2D" uid="uid://r8unqtmgq13u" path="res://assets/art/ui/window/long_background.png" id="2_c28ce"]
+[ext_resource type="Texture2D" uid="uid://do7ypxcbnx2g6" path="res://assets/art/ui/window/label_banner.png" id="3_e1358"]
+[ext_resource type="LabelSettings" uid="uid://dnpougdg66s7s" path="res://src/resources/styles/main_theme/label_styles/title/panel.tres" id="4_y32g7"]
+[ext_resource type="PackedScene" uid="uid://cytuhwbt0tg67" path="res://src/ui/hud/h_separator_2px.tscn" id="5_7n8vk"]
+
+[node name="StatsPanel" type="PanelContainer" unique_id=1923592201]
+z_index = 90
+custom_minimum_size = Vector2(1190, 429)
+custom_maximum_size = Vector2(1190, -1)
+offset_right = 310.0
+offset_bottom = 429.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("1_gmmx6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=658463068]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Banner" type="TextureRect" parent="VBoxContainer" unique_id=2115371260]
+texture_filter = 1
+custom_minimum_size = Vector2(1186, 30)
+custom_maximum_size = Vector2(1186, 30)
+layout_mode = 2
+texture = ExtResource("2_c28ce")
+expand_mode = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Banner" unique_id=1715915954]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -15.0
+offset_right = 90.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_e1358")
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/Banner" unique_id=490645207]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -11.5
+offset_right = 192.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "GELİŞTİRMELER"
+label_settings = ExtResource("4_y32g7")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" parent="VBoxContainer" unique_id=563756529 instance=ExtResource("5_7n8vk")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1210083006]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="Items" type="VBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=312261640]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Stats" type="PanelContainer" parent="VBoxContainer/MarginContainer/Items" unique_id=1528801094]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("1_gmmx6")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/Items/Stats" unique_id=1685150261]
+custom_minimum_size = Vector2(0, 350)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5

@@ -28,6 +28,11 @@ WindowManager="*uid://dwddo2i7rlpc3"
 EventBus="*uid://cwje4eobipesm"
 DragManager="*uid://cmt5edjgt0gg"
 PlayerStats="*uid://rjig3gkjkdcc"
+BayterekLoader="*uid://nkd7mhbs2vhv"
+BayterekSerializer="*uid://bncb0tmve5k7w"
+BayterekAudioManager="*uid://d3rv5nr0ujrjb"
+GameLocalization="*uid://brfo61g2bql3o"
+BayterekLocalizationLoader="*uid://cjmtxiyjohf62"
 
 [debug]
 
@@ -50,7 +55,7 @@ project/assembly_name="TaskBarIdler"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/editor_tools/plugin.cfg", "res://addons/file_exporter/plugin.cfg", "res://addons/inspector_tabs/plugin.cfg", "res://addons/project-time-tracker/plugin.cfg", "res://addons/snapshot_tool/plugin.cfg")
+enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/bayterek/plugin.cfg", "res://addons/bayterek_localization/plugin.cfg", "res://addons/file_exporter/plugin.cfg", "res://addons/inspector_tabs/plugin.cfg", "res://addons/my_tools/plugin.cfg", "res://addons/project-time-tracker/plugin.cfg")
 
 [file_customization]
 

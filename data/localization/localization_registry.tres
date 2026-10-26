@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="LocalizationRegistry" format=3 uid="uid://b5nxkvmj1cc8s"]
+
+[ext_resource type="Script" uid="uid://crcrhyhokadjw" path="res://addons/bayterek_localization/scripts/resources/localization_language.gd" id="1_h0r5q"]
+[ext_resource type="Script" uid="uid://dnfuflirg327x" path="res://addons/bayterek_localization/scripts/resources/localization_registry.gd" id="2_na31a"]
+
+[resource]
+script = ExtResource("2_na31a")
