@@ -99,12 +99,37 @@ func _update_child_panels_only():
 		if attached_offsets.has(panel):
 			panel.position = position + attached_offsets[panel]
 
+# ============================================================
+# SCALE-AWARE HELPERS
+# ============================================================
+
+## Panelin ekranda görünen (ölçeklenmiş) boyutunu döndürür.
+## pivot_offset = ZERO varsayımıyla, scale sadece boyutu büyütür.
+func _get_effective_size() -> Vector2:
+	return size * scale
+
+## Panelin ölçeklenmiş global dikdörtgenini döndürür.
+## global_position, pivot_offset = ZERO iken panelin sol-üst köşesidir.
+func _get_effective_global_rect() -> Rect2:
+	return Rect2(global_position, _get_effective_size())
+
+## Bir Control'ün ölçeklenmiş boyutunu güvenli şekilde döndürür.
+## DraggablePanel değilse scale'i de hesaba katar.
+static func get_effective_size_of(panel: Control) -> Vector2:
+	if panel is DraggablePanel:
+		return (panel as DraggablePanel)._get_effective_size()
+	return panel.size * panel.scale
+
+# ============================================================
+# CLAMP / FIX
+# ============================================================
+
 func _clamp_to_screen(position: Vector2, panel: Control) -> Vector2:
 	var screen_size = DisplayServer.screen_get_size()
-	var panel_size = panel.size
+	var eff_size: Vector2 = get_effective_size_of(panel)
 	
-	position.x = clamp(position.x, SCREEN_PADDING, screen_size.x - panel_size.x - SCREEN_PADDING)
-	position.y = clamp(position.y, SCREEN_PADDING, screen_size.y - panel_size.y - SCREEN_PADDING)
+	position.x = clamp(position.x, SCREEN_PADDING, screen_size.x - eff_size.x - SCREEN_PADDING)
+	position.y = clamp(position.y, SCREEN_PADDING, screen_size.y - eff_size.y - SCREEN_PADDING)
 	
 	return position
 
@@ -116,7 +141,7 @@ func _fix_all_panel_positions():
 	
 	var screen_size = DisplayServer.screen_get_size()
 	var game_strip_left = global_position.x
-	var game_strip_right = global_position.x + size.x
+	var game_strip_right = global_position.x + _get_effective_size().x
 	
 	var edge_distance = screen_size.x * EDGE_THRESHOLD
 	var near_left_edge = game_strip_left < edge_distance
@@ -145,7 +170,7 @@ func _align_panels_to_game_strip_left():
 	var current_x = global_position.x
 	for panel in visible_panels:
 		panel.global_position.x = current_x
-		current_x += panel.size.x + 5
+		current_x += get_effective_size_of(panel).x + 5
 	
 	_update_offsets_recursive()
 
@@ -156,20 +181,22 @@ func _align_panels_to_game_strip_right():
 	
 	visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
 	
-	var current_x = global_position.x + size.x
+	var current_x = global_position.x + _get_effective_size().x
 	for i in range(visible_panels.size() - 1, -1, -1):
 		var panel = visible_panels[i]
-		panel.global_position.x = current_x - panel.size.x
-		current_x -= panel.size.x + 5
+		var w = get_effective_size_of(panel).x
+		panel.global_position.x = current_x - w
+		current_x -= w + 5
 	
 	_update_offsets_recursive()
 
 func _align_panels_to_game_strip_center_x():
-	var game_strip_center = global_position.x + size.x / 2
+	var game_strip_center = global_position.x + _get_effective_size().x / 2
 	
 	for panel in attached_panels:
 		if panel.visible and attached_offsets.has(panel):
-			panel.global_position.x = game_strip_center - panel.size.x / 2
+			var w = get_effective_size_of(panel).x
+			panel.global_position.x = game_strip_center - w / 2
 			
 			if panel is DraggablePanel:
 				panel._update_child_panels_only()
@@ -208,7 +235,7 @@ func _check_all_panels_overflow() -> Dictionary:
 			continue
 		
 		var panel_pos = panel.global_position
-		var panel_size = panel.size
+		var panel_size = get_effective_size_of(panel)
 		
 		if panel_pos.x < SCREEN_PADDING:
 			result["left_overflow"] = true
@@ -250,23 +277,24 @@ func _fix_overflow_without_moving_game_strip(overflow_info: Dictionary):
 		var current_x = SCREEN_PADDING
 		for panel in visible_panels:
 			panel.global_position.x = current_x
-			current_x += panel.size.x + 5
+			current_x += get_effective_size_of(panel).x + 5
 	
 	elif overflow_info["right_overflow"]:
 		visible_panels.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
 		var current_x = screen_size.x - SCREEN_PADDING
 		for i in range(visible_panels.size() - 1, -1, -1):
 			var panel = visible_panels[i]
-			panel.global_position.x = current_x - panel.size.x
-			current_x -= panel.size.x + 5
+			var w = get_effective_size_of(panel).x
+			panel.global_position.x = current_x - w
+			current_x -= w + 5
 	
 	if overflow_info["top_overflow"]:
 		for panel in visible_panels:
-			panel.global_position.y = global_position.y + size.y + 5
+			panel.global_position.y = global_position.y + _get_effective_size().y + 5
 	
 	elif overflow_info["bottom_overflow"]:
 		for panel in visible_panels:
-			panel.global_position.y = global_position.y - panel.size.y - 5
+			panel.global_position.y = global_position.y - get_effective_size_of(panel).y - 5
 	
 	_update_offsets_recursive()
 

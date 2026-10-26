@@ -55,7 +55,39 @@ func _apply_scale_to_all_panels():
 			panel.scale = Vector2(current_scale, current_scale)
 			panel.pivot_offset = Vector2.ZERO
 	
+	# ÖNEMLİ: Attachment offsetlerini ölçekli boyutlara göre yenile,
+	# aksi halde hero paneli game strip'in içine kayar.
+	_refresh_attachment_offsets()
 	_update_all_positions()
+
+## Scale değişiminden sonra attachment offsetlerini yeni ölçekli
+## boyutlarla yeniden hesaplar. İlk kurulumda kullanılan ölçeksiz
+## değerler burada düzeltilir.
+func _refresh_attachment_offsets():
+	var game_strip = panels.get("game_strip")
+	var hero = panels.get("hero")
+	var stack = panels.get("stack")
+	var map_panel = panels.get("map_panel")
+	
+	if not (game_strip is DraggablePanel and hero is DraggablePanel):
+		return
+	
+	# Hero, game_strip'in ÜSTÜNDE olmalı:
+	#   offset.y = -(hero efektif yüksekliği) - INVENTORY_GAP
+	var hero_eff_h: float = hero.size.y * current_scale
+	game_strip.attached_offsets[hero] = Vector2(0, -hero_eff_h - INVENTORY_GAP)
+	
+	if hero is DraggablePanel:
+		if stack is DraggablePanel:
+			# Stack, hero'nun SOLUNDA:
+			#   offset.x = -(stack efektif genişliği) - SIDE_PANEL_GAP
+			var stack_eff_w: float = stack.size.x * current_scale
+			hero.attached_offsets[stack] = Vector2(-stack_eff_w - SIDE_PANEL_GAP, 0)
+		if map_panel is DraggablePanel:
+			# Map, hero'nun SAĞINDA:
+			#   offset.x = +(hero efektif genişliği) + SIDE_PANEL_GAP
+			var hero_eff_w: float = hero.size.x * current_scale
+			hero.attached_offsets[map_panel] = Vector2(hero_eff_w + SIDE_PANEL_GAP, 0)
 
 func _create_all_panels():
 	_create_panel("game_strip")
@@ -109,6 +141,8 @@ func _setup_panel_attachments():
 		game_strip.is_group_leader = true
 	
 	# Panelleri birbirine bağla
+	# NOT: Buradaki offsetler SADECE ilk kurulum içindir. _apply_scale_to_all_panels()
+	# çağrıldığında _refresh_attachment_offsets() bunları ölçekli değerlerle ezer.
 	if game_strip is DraggablePanel and hero is DraggablePanel:
 		game_strip.attach_panel(hero, Vector2(0, -hero.size.y - INVENTORY_GAP))
 	
@@ -157,7 +191,7 @@ func _update_all_positions():
 			
 			# Map - hero'nun sağında
 			map_panel.position = Vector2(
-				hero.position.x + scaled_map_size.x + SIDE_PANEL_GAP,
+				hero.position.x + scaled_hero_size.x + SIDE_PANEL_GAP,
 				hero.position.y
 			)
 		
